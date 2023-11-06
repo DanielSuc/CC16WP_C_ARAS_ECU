@@ -1,0 +1,453 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"user_api_can.c"
+  14              		.text
+  15              		.section	.text.user_can_module_rx,"ax",%progbits
+  16              		.align	1
+  17              		.global	user_can_module_rx
+  18              		.arch armv7e-m
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  22              		.fpu fpv4-sp-d16
+  24              	user_can_module_rx:
+  25              		@ args = 0, pretend = 0, frame = 0
+  26              		@ frame_needed = 0, uses_anonymous_args = 0
+  27 0000 08B5     		push	{r3, lr}
+  28 0002 FFF7FEFF 		bl	sfl_can_queue_in_process
+  29 0006 08BD     		pop	{r3, pc}
+  31              		.section	.text.user_can_db_process_tx,"ax",%progbits
+  32              		.align	1
+  33              		.global	user_can_db_process_tx
+  34              		.syntax unified
+  35              		.thumb
+  36              		.thumb_func
+  37              		.fpu fpv4-sp-d16
+  39              	user_can_db_process_tx:
+  40              		@ args = 0, pretend = 0, frame = 0
+  41              		@ frame_needed = 0, uses_anonymous_args = 0
+  42 0000 08B5     		push	{r3, lr}
+  43 0002 FFF7FEFF 		bl	sfl_can_db_output_to_bus
+  44 0006 08BD     		pop	{r3, pc}
+  46              		.section	.text.user_can_msg_send,"ax",%progbits
+  47              		.align	1
+  48              		.global	user_can_msg_send
+  49              		.syntax unified
+  50              		.thumb
+  51              		.thumb_func
+  52              		.fpu fpv4-sp-d16
+  54              	user_can_msg_send:
+  55              		@ args = 32, pretend = 0, frame = 8
+  56              		@ frame_needed = 0, uses_anonymous_args = 0
+  57 0000 30B5     		push	{r4, r5, lr}
+  58 0002 85B0     		sub	sp, sp, #20
+  59 0004 9DF82040 		ldrb	r4, [sp, #32]	@ zero_extendqisi2
+  60 0008 8DF80840 		strb	r4, [sp, #8]
+  61 000c 9DF82440 		ldrb	r4, [sp, #36]	@ zero_extendqisi2
+  62 0010 8DF80940 		strb	r4, [sp, #9]
+  63 0014 9DF82840 		ldrb	r4, [sp, #40]	@ zero_extendqisi2
+  64 0018 8DF80A40 		strb	r4, [sp, #10]
+  65 001c 9DF82C40 		ldrb	r4, [sp, #44]	@ zero_extendqisi2
+  66 0020 8DF80B40 		strb	r4, [sp, #11]
+  67 0024 9DF83040 		ldrb	r4, [sp, #48]	@ zero_extendqisi2
+  68 0028 8DF80C40 		strb	r4, [sp, #12]
+  69 002c 9DF83440 		ldrb	r4, [sp, #52]	@ zero_extendqisi2
+  70 0030 8DF80D40 		strb	r4, [sp, #13]
+  71 0034 9DF83840 		ldrb	r4, [sp, #56]	@ zero_extendqisi2
+  72 0038 8DF80E40 		strb	r4, [sp, #14]
+  73 003c 9DF83C40 		ldrb	r4, [sp, #60]	@ zero_extendqisi2
+  74 0040 8DF80F40 		strb	r4, [sp, #15]
+  75 0044 00EB0015 		add	r5, r0, r0, lsl #4
+  76 0048 104C     		ldr	r4, .L10
+  77 004a 54F82540 		ldr	r4, [r4, r5, lsl #2]
+  78 004e C4B1     		cbz	r4, .L7
+  79 0050 1D46     		mov	r5, r3
+  80 0052 1446     		mov	r4, r2
+  81 0054 21F00041 		bic	r1, r1, #-2147483648
+  82 0058 00EB0010 		add	r0, r0, r0, lsl #4
+  83 005c 02AB     		add	r3, sp, #8
+  84 005e 0193     		str	r3, [sp, #4]
+  85 0060 0023     		movs	r3, #0
+  86 0062 0093     		str	r3, [sp]
+  87 0064 2A46     		mov	r2, r5
+  88 0066 41EAC471 		orr	r1, r1, r4, lsl #31
+  89 006a 084C     		ldr	r4, .L10
+  90 006c 04EB8000 		add	r0, r4, r0, lsl #2
+  91 0070 FFF7FEFF 		bl	sfl_can_send_message
+  92 0074 0346     		mov	r3, r0
+  93 0076 28B1     		cbz	r0, .L6
+  94 0078 0228     		cmp	r0, #2
+  95 007a 0CBF     		ite	eq
+  96 007c 0F23     		moveq	r3, #15
+  97 007e 0823     		movne	r3, #8
+  98 0080 00E0     		b	.L6
+  99              	.L7:
+ 100 0082 0823     		movs	r3, #8
+ 101              	.L6:
+ 102 0084 1846     		mov	r0, r3
+ 103 0086 05B0     		add	sp, sp, #20
+ 104              		@ sp needed
+ 105 0088 30BD     		pop	{r4, r5, pc}
+ 106              	.L11:
+ 107 008a 00BF     		.align	2
+ 108              	.L10:
+ 109 008c 00000000 		.word	can_handle
+ 111              		.section	.text.user_can_msg_buffer_send,"ax",%progbits
+ 112              		.align	1
+ 113              		.global	user_can_msg_buffer_send
+ 114              		.syntax unified
+ 115              		.thumb
+ 116              		.thumb_func
+ 117              		.fpu fpv4-sp-d16
+ 119              	user_can_msg_buffer_send:
+ 120              		@ args = 4, pretend = 0, frame = 0
+ 121              		@ frame_needed = 0, uses_anonymous_args = 0
+ 122 0000 30B5     		push	{r4, r5, lr}
+ 123 0002 83B0     		sub	sp, sp, #12
+ 124 0004 00EB0015 		add	r5, r0, r0, lsl #4
+ 125 0008 104C     		ldr	r4, .L17
+ 126 000a 54F82540 		ldr	r4, [r4, r5, lsl #2]
+ 127 000e C4B1     		cbz	r4, .L14
+ 128 0010 1D46     		mov	r5, r3
+ 129 0012 1446     		mov	r4, r2
+ 130 0014 21F00041 		bic	r1, r1, #-2147483648
+ 131 0018 00EB0010 		add	r0, r0, r0, lsl #4
+ 132 001c 069B     		ldr	r3, [sp, #24]
+ 133 001e 0193     		str	r3, [sp, #4]
+ 134 0020 0023     		movs	r3, #0
+ 135 0022 0093     		str	r3, [sp]
+ 136 0024 2A46     		mov	r2, r5
+ 137 0026 41EAC471 		orr	r1, r1, r4, lsl #31
+ 138 002a 084C     		ldr	r4, .L17
+ 139 002c 04EB8000 		add	r0, r4, r0, lsl #2
+ 140 0030 FFF7FEFF 		bl	sfl_can_send_message
+ 141 0034 0346     		mov	r3, r0
+ 142 0036 28B1     		cbz	r0, .L13
+ 143 0038 0228     		cmp	r0, #2
+ 144 003a 0CBF     		ite	eq
+ 145 003c 0F23     		moveq	r3, #15
+ 146 003e 0823     		movne	r3, #8
+ 147 0040 00E0     		b	.L13
+ 148              	.L14:
+ 149 0042 0823     		movs	r3, #8
+ 150              	.L13:
+ 151 0044 1846     		mov	r0, r3
+ 152 0046 03B0     		add	sp, sp, #12
+ 153              		@ sp needed
+ 154 0048 30BD     		pop	{r4, r5, pc}
+ 155              	.L18:
+ 156 004a 00BF     		.align	2
+ 157              	.L17:
+ 158 004c 00000000 		.word	can_handle
+ 160              		.section	.text.user_can_fd_msg_buffer_send,"ax",%progbits
+ 161              		.align	1
+ 162              		.global	user_can_fd_msg_buffer_send
+ 163              		.syntax unified
+ 164              		.thumb
+ 165              		.thumb_func
+ 166              		.fpu fpv4-sp-d16
+ 168              	user_can_fd_msg_buffer_send:
+ 169              		@ args = 8, pretend = 0, frame = 0
+ 170              		@ frame_needed = 0, uses_anonymous_args = 0
+ 171 0000 30B5     		push	{r4, r5, lr}
+ 172 0002 83B0     		sub	sp, sp, #12
+ 173 0004 00EB0015 		add	r5, r0, r0, lsl #4
+ 174 0008 114C     		ldr	r4, .L24
+ 175 000a 54F82540 		ldr	r4, [r4, r5, lsl #2]
+ 176 000e D4B1     		cbz	r4, .L21
+ 177 0010 1D46     		mov	r5, r3
+ 178 0012 1446     		mov	r4, r2
+ 179 0014 21F00041 		bic	r1, r1, #-2147483648
+ 180 0018 00EB0010 		add	r0, r0, r0, lsl #4
+ 181 001c 079B     		ldr	r3, [sp, #28]
+ 182 001e 0193     		str	r3, [sp, #4]
+ 183 0020 9DF81830 		ldrb	r3, [sp, #24]	@ zero_extendqisi2
+ 184 0024 0093     		str	r3, [sp]
+ 185 0026 0123     		movs	r3, #1
+ 186 0028 2A46     		mov	r2, r5
+ 187 002a 41EAC471 		orr	r1, r1, r4, lsl #31
+ 188 002e 084C     		ldr	r4, .L24
+ 189 0030 04EB8000 		add	r0, r4, r0, lsl #2
+ 190 0034 FFF7FEFF 		bl	sfl_can_send_message
+ 191 0038 0346     		mov	r3, r0
+ 192 003a 28B1     		cbz	r0, .L20
+ 193 003c 0228     		cmp	r0, #2
+ 194 003e 0CBF     		ite	eq
+ 195 0040 0F23     		moveq	r3, #15
+ 196 0042 0823     		movne	r3, #8
+ 197 0044 00E0     		b	.L20
+ 198              	.L21:
+ 199 0046 0823     		movs	r3, #8
+ 200              	.L20:
+ 201 0048 1846     		mov	r0, r3
+ 202 004a 03B0     		add	sp, sp, #12
+ 203              		@ sp needed
+ 204 004c 30BD     		pop	{r4, r5, pc}
+ 205              	.L25:
+ 206 004e 00BF     		.align	2
+ 207              	.L24:
+ 208 0050 00000000 		.word	can_handle
+ 210              		.section	.text.user_can_db_set_value,"ax",%progbits
+ 211              		.align	1
+ 212              		.global	user_can_db_set_value
+ 213              		.syntax unified
+ 214              		.thumb
+ 215              		.thumb_func
+ 216              		.fpu fpv4-sp-d16
+ 218              	user_can_db_set_value:
+ 219              		@ args = 0, pretend = 0, frame = 0
+ 220              		@ frame_needed = 0, uses_anonymous_args = 0
+ 221 0000 08B5     		push	{r3, lr}
+ 222 0002 FFF7FEFF 		bl	sfl_can_db_set_value
+ 223 0006 08BD     		pop	{r3, pc}
+ 225              		.section	.text.user_can_db_get_value,"ax",%progbits
+ 226              		.align	1
+ 227              		.global	user_can_db_get_value
+ 228              		.syntax unified
+ 229              		.thumb
+ 230              		.thumb_func
+ 231              		.fpu fpv4-sp-d16
+ 233              	user_can_db_get_value:
+ 234              		@ args = 0, pretend = 0, frame = 0
+ 235              		@ frame_needed = 0, uses_anonymous_args = 0
+ 236 0000 08B5     		push	{r3, lr}
+ 237 0002 FFF7FEFF 		bl	sfl_can_db_get_value
+ 238 0006 08BD     		pop	{r3, pc}
+ 240              		.section	.text.user_can_db_block_received,"ax",%progbits
+ 241              		.align	1
+ 242              		.global	user_can_db_block_received
+ 243              		.syntax unified
+ 244              		.thumb
+ 245              		.thumb_func
+ 246              		.fpu fpv4-sp-d16
+ 248              	user_can_db_block_received:
+ 249              		@ args = 0, pretend = 0, frame = 0
+ 250              		@ frame_needed = 0, uses_anonymous_args = 0
+ 251 0000 08B5     		push	{r3, lr}
+ 252 0002 FFF7FEFF 		bl	sfl_can_db_block_received
+ 253 0006 08BD     		pop	{r3, pc}
+ 255              		.section	.text.user_can_db_test_dp_value,"ax",%progbits
+ 256              		.align	1
+ 257              		.global	user_can_db_test_dp_value
+ 258              		.syntax unified
+ 259              		.thumb
+ 260              		.thumb_func
+ 261              		.fpu fpv4-sp-d16
+ 263              	user_can_db_test_dp_value:
+ 264              		@ args = 0, pretend = 0, frame = 0
+ 265              		@ frame_needed = 0, uses_anonymous_args = 0
+ 266 0000 08B5     		push	{r3, lr}
+ 267 0002 FFF7FEFF 		bl	sfl_can_db_test_dp_value
+ 268 0006 08BD     		pop	{r3, pc}
+ 270              		.section	.text.user_can_db_block_expired,"ax",%progbits
+ 271              		.align	1
+ 272              		.global	user_can_db_block_expired
+ 273              		.syntax unified
+ 274              		.thumb
+ 275              		.thumb_func
+ 276              		.fpu fpv4-sp-d16
+ 278              	user_can_db_block_expired:
+ 279              		@ args = 0, pretend = 0, frame = 0
+ 280              		@ frame_needed = 0, uses_anonymous_args = 0
+ 281 0000 08B5     		push	{r3, lr}
+ 282 0002 FFF7FEFF 		bl	sfl_can_db_block_expired
+ 283 0006 08BD     		pop	{r3, pc}
+ 285              		.section	.text.user_can_db_datapoint_expired,"ax",%progbits
+ 286              		.align	1
+ 287              		.global	user_can_db_datapoint_expired
+ 288              		.syntax unified
+ 289              		.thumb
+ 290              		.thumb_func
+ 291              		.fpu fpv4-sp-d16
+ 293              	user_can_db_datapoint_expired:
+ 294              		@ args = 0, pretend = 0, frame = 0
+ 295              		@ frame_needed = 0, uses_anonymous_args = 0
+ 296 0000 08B5     		push	{r3, lr}
+ 297 0002 FFF7FEFF 		bl	sfl_can_db_datapoint_expired
+ 298 0006 08BD     		pop	{r3, pc}
+ 300              		.section	.text.user_can_db_send_dp,"ax",%progbits
+ 301              		.align	1
+ 302              		.global	user_can_db_send_dp
+ 303              		.syntax unified
+ 304              		.thumb
+ 305              		.thumb_func
+ 306              		.fpu fpv4-sp-d16
+ 308              	user_can_db_send_dp:
+ 309              		@ args = 0, pretend = 0, frame = 0
+ 310              		@ frame_needed = 0, uses_anonymous_args = 0
+ 311 0000 08B5     		push	{r3, lr}
+ 312 0002 FFF7FEFF 		bl	sfl_can_db_set_transmit_flag
+ 313 0006 08BD     		pop	{r3, pc}
+ 315              		.section	.text.user_can_db_get_value_on_change,"ax",%progbits
+ 316              		.align	1
+ 317              		.global	user_can_db_get_value_on_change
+ 318              		.syntax unified
+ 319              		.thumb
+ 320              		.thumb_func
+ 321              		.fpu fpv4-sp-d16
+ 323              	user_can_db_get_value_on_change:
+ 324              		@ args = 0, pretend = 0, frame = 8
+ 325              		@ frame_needed = 0, uses_anonymous_args = 0
+ 326 0000 10B5     		push	{r4, lr}
+ 327 0002 82B0     		sub	sp, sp, #8
+ 328 0004 0C46     		mov	r4, r1
+ 329 0006 0023     		movs	r3, #0
+ 330 0008 8DF80730 		strb	r3, [sp, #7]
+ 331 000c 0DF10701 		add	r1, sp, #7
+ 332 0010 FFF7FEFF 		bl	sfl_can_db_get_value_on_change
+ 333 0014 2060     		str	r0, [r4]
+ 334 0016 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 335 001a 0030     		adds	r0, r0, #0
+ 336 001c 18BF     		it	ne
+ 337 001e 0120     		movne	r0, #1
+ 338 0020 02B0     		add	sp, sp, #8
+ 339              		@ sp needed
+ 340 0022 10BD     		pop	{r4, pc}
+ 342              		.section	.text.user_can_db_transmit_deactivate,"ax",%progbits
+ 343              		.align	1
+ 344              		.global	user_can_db_transmit_deactivate
+ 345              		.syntax unified
+ 346              		.thumb
+ 347              		.thumb_func
+ 348              		.fpu fpv4-sp-d16
+ 350              	user_can_db_transmit_deactivate:
+ 351              		@ args = 0, pretend = 0, frame = 0
+ 352              		@ frame_needed = 0, uses_anonymous_args = 0
+ 353 0000 08B5     		push	{r3, lr}
+ 354 0002 0146     		mov	r1, r0
+ 355 0004 0220     		movs	r0, #2
+ 356 0006 FFF7FEFF 		bl	sfl_can_db_stop_transmission
+ 357 000a 08BD     		pop	{r3, pc}
+ 359              		.section	.text.user_can_db_stop_transmission,"ax",%progbits
+ 360              		.align	1
+ 361              		.global	user_can_db_stop_transmission
+ 362              		.syntax unified
+ 363              		.thumb
+ 364              		.thumb_func
+ 365              		.fpu fpv4-sp-d16
+ 367              	user_can_db_stop_transmission:
+ 368              		@ args = 0, pretend = 0, frame = 0
+ 369              		@ frame_needed = 0, uses_anonymous_args = 0
+ 370 0000 08B5     		push	{r3, lr}
+ 371 0002 FFF7FEFF 		bl	sfl_can_db_stop_transmission
+ 372 0006 08BD     		pop	{r3, pc}
+ 374              		.section	.text.user_can_db_stop_gateway_for_known_ids,"ax",%progbits
+ 375              		.align	1
+ 376              		.global	user_can_db_stop_gateway_for_known_ids
+ 377              		.syntax unified
+ 378              		.thumb
+ 379              		.thumb_func
+ 380              		.fpu fpv4-sp-d16
+ 382              	user_can_db_stop_gateway_for_known_ids:
+ 383              		@ args = 0, pretend = 0, frame = 0
+ 384              		@ frame_needed = 0, uses_anonymous_args = 0
+ 385 0000 08B5     		push	{r3, lr}
+ 386 0002 FFF7FEFF 		bl	sfl_can_db_stop_gateway_for_known_ids
+ 387 0006 08BD     		pop	{r3, pc}
+ 389              		.section	.text.user_can_db_stop_gateway_for_unknown_ids,"ax",%progbits
+ 390              		.align	1
+ 391              		.global	user_can_db_stop_gateway_for_unknown_ids
+ 392              		.syntax unified
+ 393              		.thumb
+ 394              		.thumb_func
+ 395              		.fpu fpv4-sp-d16
+ 397              	user_can_db_stop_gateway_for_unknown_ids:
+ 398              		@ args = 0, pretend = 0, frame = 0
+ 399              		@ frame_needed = 0, uses_anonymous_args = 0
+ 400 0000 08B5     		push	{r3, lr}
+ 401 0002 FFF7FEFF 		bl	sfl_can_db_stop_gateway_for_unknown_ids
+ 402 0006 08BD     		pop	{r3, pc}
+ 404              		.section	.text.user_can_get_error,"ax",%progbits
+ 405              		.align	1
+ 406              		.global	user_can_get_error
+ 407              		.syntax unified
+ 408              		.thumb
+ 409              		.thumb_func
+ 410              		.fpu fpv4-sp-d16
+ 412              	user_can_get_error:
+ 413              		@ args = 0, pretend = 0, frame = 0
+ 414              		@ frame_needed = 0, uses_anonymous_args = 0
+ 415              		@ link register save eliminated.
+ 416 0000 0A4A     		ldr	r2, .L54
+ 417 0002 02EBC003 		add	r3, r2, r0, lsl #3
+ 418 0006 5B68     		ldr	r3, [r3, #4]
+ 419 0008 4B60     		str	r3, [r1, #4]
+ 420 000a 52F83020 		ldr	r2, [r2, r0, lsl #3]
+ 421 000e 8A60     		str	r2, [r1, #8]
+ 422 0010 13F0040F 		tst	r3, #4
+ 423 0014 02D0     		beq	.L51
+ 424 0016 0223     		movs	r3, #2
+ 425 0018 0B70     		strb	r3, [r1]
+ 426 001a 7047     		bx	lr
+ 427              	.L51:
+ 428 001c 40F20232 		movw	r2, #770
+ 429 0020 1342     		tst	r3, r2
+ 430 0022 14BF     		ite	ne
+ 431 0024 0123     		movne	r3, #1
+ 432 0026 0023     		moveq	r3, #0
+ 433 0028 0B70     		strb	r3, [r1]
+ 434 002a 7047     		bx	lr
+ 435              	.L55:
+ 436              		.align	2
+ 437              	.L54:
+ 438 002c 00000000 		.word	can_error_handle
+ 440              		.section	.text.user_can_set_bl_baudrate,"ax",%progbits
+ 441              		.align	1
+ 442              		.global	user_can_set_bl_baudrate
+ 443              		.syntax unified
+ 444              		.thumb
+ 445              		.thumb_func
+ 446              		.fpu fpv4-sp-d16
+ 448              	user_can_set_bl_baudrate:
+ 449              		@ args = 0, pretend = 0, frame = 0
+ 450              		@ frame_needed = 0, uses_anonymous_args = 0
+ 451 0000 38B5     		push	{r3, r4, r5, lr}
+ 452 0002 0446     		mov	r4, r0
+ 453 0004 FFF7FEFF 		bl	user_eeprom_read_bl_can_bus
+ 454 0008 631E     		subs	r3, r4, #1
+ 455 000a DBB2     		uxtb	r3, r3
+ 456 000c 0C2B     		cmp	r3, #12
+ 457 000e 05D9     		bls	.L60
+ 458 0010 0C4B     		ldr	r3, .L61
+ 459 0012 0022     		movs	r2, #0
+ 460 0014 1A70     		strb	r2, [r3]
+ 461              	.L58:
+ 462 0016 0B4B     		ldr	r3, .L61
+ 463 0018 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 464 001a 38BD     		pop	{r3, r4, r5, pc}
+ 465              	.L60:
+ 466 001c 00EB0010 		add	r0, r0, r0, lsl #4
+ 467 0020 094D     		ldr	r5, .L61+4
+ 468 0022 05EB8005 		add	r5, r5, r0, lsl #2
+ 469 0026 2146     		mov	r1, r4
+ 470 0028 2846     		mov	r0, r5
+ 471 002a FFF7FEFF 		bl	hal_can_set_baudrate
+ 472 002e 0121     		movs	r1, #1
+ 473 0030 2046     		mov	r0, r4
+ 474 0032 FFF7FEFF 		bl	sfl_can_db_tables_convert_baud
+ 475 0036 0146     		mov	r1, r0
+ 476 0038 2846     		mov	r0, r5
+ 477 003a FFF7FEFF 		bl	sfl_bl_protocol_s32k_set_baudrate
+ 478 003e 014B     		ldr	r3, .L61
+ 479 0040 1870     		strb	r0, [r3]
+ 480 0042 E8E7     		b	.L58
+ 481              	.L62:
+ 482              		.align	2
+ 483              	.L61:
+ 484 0044 00000000 		.word	.LANCHOR0
+ 485 0048 00000000 		.word	can_handle
+ 487              		.section	.bss.ret.11946,"aw",%nobits
+ 488              		.set	.LANCHOR0,. + 0
+ 491              	ret.11946:
+ 492 0000 00       		.space	1
+ 493              		.ident	"GCC: (GNU Tools for Arm Embedded Processors 8-2019-q3-update) 8.3.1 20190703 (release) [gc

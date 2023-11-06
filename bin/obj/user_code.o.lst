@@ -1,0 +1,99 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"user_code.c"
+  14              		.text
+  15              		.section	.text.usercode_init,"ax",%progbits
+  16              		.align	1
+  17              		.global	usercode_init
+  18              		.arch armv7e-m
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  22              		.fpu fpv4-sp-d16
+  24              	usercode_init:
+  25              		@ args = 0, pretend = 0, frame = 0
+  26              		@ frame_needed = 0, uses_anonymous_args = 0
+  27 0000 08B5     		push	{r3, lr}
+  28 0002 0249     		ldr	r1, .L3
+  29 0004 0248     		ldr	r0, .L3+4
+  30 0006 FFF7FEFF 		bl	user_eeprom_write_app_info
+  31 000a 08BD     		pop	{r3, pc}
+  32              	.L4:
+  33              		.align	2
+  34              	.L3:
+  35 000c 00000000 		.word	.LC0
+  36 0010 18000000 		.word	.LC1
+  38              		.section	.text.usercode,"ax",%progbits
+  39              		.align	1
+  40              		.global	usercode
+  41              		.syntax unified
+  42              		.thumb
+  43              		.thumb_func
+  44              		.fpu fpv4-sp-d16
+  46              	usercode:
+  47              		@ args = 0, pretend = 0, frame = 0
+  48              		@ frame_needed = 0, uses_anonymous_args = 0
+  49              		@ link register save eliminated.
+  50 0000 7047     		bx	lr
+  52              		.section	.text.user_can_receive_msg_callback,"ax",%progbits
+  53              		.align	1
+  54              		.global	user_can_receive_msg_callback
+  55              		.syntax unified
+  56              		.thumb
+  57              		.thumb_func
+  58              		.fpu fpv4-sp-d16
+  60              	user_can_receive_msg_callback:
+  61              		@ args = 0, pretend = 0, frame = 0
+  62              		@ frame_needed = 0, uses_anonymous_args = 0
+  63              		@ link register save eliminated.
+  64 0000 7047     		bx	lr
+  66              		.section	.text.user_sci_continuous_receive_callback,"ax",%progbits
+  67              		.align	1
+  68              		.global	user_sci_continuous_receive_callback
+  69              		.syntax unified
+  70              		.thumb
+  71              		.thumb_func
+  72              		.fpu fpv4-sp-d16
+  74              	user_sci_continuous_receive_callback:
+  75              		@ args = 0, pretend = 0, frame = 0
+  76              		@ frame_needed = 0, uses_anonymous_args = 0
+  77              		@ link register save eliminated.
+  78 0000 7047     		bx	lr
+  80              		.section	.text.user_int_timer_1ms,"ax",%progbits
+  81              		.align	1
+  82              		.global	user_int_timer_1ms
+  83              		.syntax unified
+  84              		.thumb
+  85              		.thumb_func
+  86              		.fpu fpv4-sp-d16
+  88              	user_int_timer_1ms:
+  89              		@ args = 0, pretend = 0, frame = 0
+  90              		@ frame_needed = 0, uses_anonymous_args = 0
+  91              		@ link register save eliminated.
+  92 0000 7047     		bx	lr
+  94              		.section	.rodata.usercode_init.str1.4,"aMS",%progbits,1
+  95              		.align	2
+  96              	.LC0:
+  97 0000 56302E30 		.ascii	"V0.0.1              \000"
+  97      2E312020 
+  97      20202020 
+  97      20202020 
+  97      20202020 
+  98 0015 000000   		.space	3
+  99              	.LC1:
+ 100 0018 43433136 		.ascii	"CC16WP Application            \000"
+ 100      57502041 
+ 100      70706C69 
+ 100      63617469 
+ 100      6F6E2020 
+ 101              		.ident	"GCC: (GNU Tools for Arm Embedded Processors 8-2019-q3-update) 8.3.1 20190703 (release) [gc

@@ -1,0 +1,92 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"can_db_tables.c"
+  14              		.text
+  15              		.global	can_gateway_db_const
+  16              		.global	can_bus_db_const
+  17              		.global	can_block_db_const
+  18              		.global	can_datenpunkt_db_const
+  19              		.section	.rodata#,"aw"
+  20              		.align	2
+  23              	can_gateway_db_const:
+  24 0000 0000     		.space	2
+  25 0002 0000     		.space	2
+  28              	can_bus_db_const:
+  29 0004 00       		.byte	0
+  30 0005 01       		.byte	1
+  31 0006 00       		.byte	0
+  32 0007 03       		.byte	3
+  33 0008 00       		.byte	0
+  34 0009 35303020 		.ascii	"500 kBit\000"
+  34      6B426974 
+  34      00
+  35 0012 0000     		.space	2
+  36 0014 03       		.byte	3
+  37 0015 04       		.byte	4
+  38 0016 05       		.byte	5
+  39 0017 05       		.byte	5
+  40 0018 00       		.byte	0
+  41 0019 02       		.byte	2
+  42 001a 00       		.ascii	"\000"
+  43 001b 00000000 		.space	10
+  43      00000000 
+  43      0000
+  44 0025 00       		.byte	0
+  45 0026 00       		.byte	0
+  46 0027 00       		.byte	0
+  47 0028 00       		.byte	0
+  48 0029 00       		.byte	0
+  49 002a 00       		.byte	0
+  50 002b 00       		.byte	0
+  51 002c 01       		.byte	1
+  52 002d 01       		.byte	1
+  53 002e 00       		.byte	0
+  54 002f 03       		.byte	3
+  55 0030 00       		.byte	0
+  56 0031 35303020 		.ascii	"500 kBit\000"
+  56      6B426974 
+  56      00
+  57 003a 0000     		.space	2
+  58 003c 03       		.byte	3
+  59 003d 04       		.byte	4
+  60 003e 05       		.byte	5
+  61 003f 05       		.byte	5
+  62 0040 00       		.byte	0
+  63 0041 02       		.byte	2
+  64 0042 00       		.ascii	"\000"
+  65 0043 00000000 		.space	10
+  65      00000000 
+  65      0000
+  66 004d 00       		.byte	0
+  67 004e 00       		.byte	0
+  68 004f 00       		.byte	0
+  69 0050 00       		.byte	0
+  70 0051 00       		.byte	0
+  71 0052 00       		.byte	0
+  72 0053 00       		.byte	0
+  73 0054 00000000 		.space	40
+  73      00000000 
+  73      00000000 
+  73      00000000 
+  73      00000000 
+  76              	can_block_db_const:
+  77 007c 00000000 		.space	36
+  77      00000000 
+  77      00000000 
+  77      00000000 
+  77      00000000 
+  80              	can_datenpunkt_db_const:
+  81 00a0 00000000 		.space	12
+  81      00000000 
+  81      00000000 
+  82              		.ident	"GCC: (GNU Tools for Arm Embedded Processors 8-2019-q3-update) 8.3.1 20190703 (release) [gc

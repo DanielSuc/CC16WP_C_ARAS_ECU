@@ -1,0 +1,592 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"sci_app.c"
+  14              		.text
+  15              		.section	.text.sci_init,"ax",%progbits
+  16              		.align	1
+  17              		.global	sci_init
+  18              		.arch armv7e-m
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  22              		.fpu fpv4-sp-d16
+  24              	sci_init:
+  25              		@ args = 0, pretend = 0, frame = 0
+  26              		@ frame_needed = 0, uses_anonymous_args = 0
+  27 0000 0328     		cmp	r0, #3
+  28 0002 01D9     		bls	.L8
+  29 0004 0420     		movs	r0, #4
+  30 0006 7047     		bx	lr
+  31              	.L8:
+  32 0008 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  33 000a 0446     		mov	r4, r0
+  34 000c 0B4E     		ldr	r6, .L9
+  35 000e 4700     		lsls	r7, r0, #1
+  36 0010 3D18     		adds	r5, r7, r0
+  37 0012 06EBC505 		add	r5, r6, r5, lsl #3
+  38 0016 2979     		ldrb	r1, [r5, #4]	@ zero_extendqisi2
+  39 0018 2846     		mov	r0, r5
+  40 001a FFF7FEFF 		bl	hal_sci_init
+  41 001e 6B69     		ldr	r3, [r5, #20]
+  42 0020 2A69     		ldr	r2, [r5, #16]
+  43 0022 E968     		ldr	r1, [r5, #12]
+  44 0024 2846     		mov	r0, r5
+  45 0026 FFF7FEFF 		bl	hal_sci_set_callback
+  46 002a 0122     		movs	r2, #1
+  47 002c 0449     		ldr	r1, .L9+4
+  48 002e 2144     		add	r1, r1, r4
+  49 0030 2846     		mov	r0, r5
+  50 0032 FFF7FEFF 		bl	hal_sci_receive
+  51 0036 0020     		movs	r0, #0
+  52 0038 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+  53              	.L10:
+  54 003a 00BF     		.align	2
+  55              	.L9:
+  56 003c 00000000 		.word	.LANCHOR0
+  57 0040 00000000 		.word	.LANCHOR1
+  59              		.section	.text.sci_set_baudrate,"ax",%progbits
+  60              		.align	1
+  61              		.global	sci_set_baudrate
+  62              		.syntax unified
+  63              		.thumb
+  64              		.thumb_func
+  65              		.fpu fpv4-sp-d16
+  67              	sci_set_baudrate:
+  68              		@ args = 0, pretend = 0, frame = 0
+  69              		@ frame_needed = 0, uses_anonymous_args = 0
+  70 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  71 0004 0328     		cmp	r0, #3
+  72 0006 03D9     		bls	.L15
+  73 0008 0425     		movs	r5, #4
+  74              	.L12:
+  75 000a 2846     		mov	r0, r5
+  76 000c BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+  77              	.L15:
+  78 0010 0D46     		mov	r5, r1
+  79 0012 0646     		mov	r6, r0
+  80 0014 104F     		ldr	r7, .L16
+  81 0016 4FEA4008 		lsl	r8, r0, #1
+  82 001a 08EB0004 		add	r4, r8, r0
+  83 001e 07EBC404 		add	r4, r7, r4, lsl #3
+  84 0022 2046     		mov	r0, r4
+  85 0024 FFF7FEFF 		bl	hal_sci_deinit
+  86 0028 A560     		str	r5, [r4, #8]
+  87 002a 2946     		mov	r1, r5
+  88 002c 2046     		mov	r0, r4
+  89 002e FFF7FEFF 		bl	hal_sci_set_baudrate
+  90 0032 0546     		mov	r5, r0
+  91 0034 2179     		ldrb	r1, [r4, #4]	@ zero_extendqisi2
+  92 0036 2046     		mov	r0, r4
+  93 0038 FFF7FEFF 		bl	hal_sci_init
+  94 003c 6369     		ldr	r3, [r4, #20]
+  95 003e 2269     		ldr	r2, [r4, #16]
+  96 0040 E168     		ldr	r1, [r4, #12]
+  97 0042 2046     		mov	r0, r4
+  98 0044 FFF7FEFF 		bl	hal_sci_set_callback
+  99 0048 0122     		movs	r2, #1
+ 100 004a 0449     		ldr	r1, .L16+4
+ 101 004c 3144     		add	r1, r1, r6
+ 102 004e 2046     		mov	r0, r4
+ 103 0050 FFF7FEFF 		bl	hal_sci_receive
+ 104 0054 D9E7     		b	.L12
+ 105              	.L17:
+ 106 0056 00BF     		.align	2
+ 107              	.L16:
+ 108 0058 00000000 		.word	.LANCHOR0
+ 109 005c 00000000 		.word	.LANCHOR1
+ 111              		.section	.text.sci_deinit,"ax",%progbits
+ 112              		.align	1
+ 113              		.global	sci_deinit
+ 114              		.syntax unified
+ 115              		.thumb
+ 116              		.thumb_func
+ 117              		.fpu fpv4-sp-d16
+ 119              	sci_deinit:
+ 120              		@ args = 0, pretend = 0, frame = 0
+ 121              		@ frame_needed = 0, uses_anonymous_args = 0
+ 122 0000 0328     		cmp	r0, #3
+ 123 0002 01D9     		bls	.L25
+ 124 0004 0420     		movs	r0, #4
+ 125 0006 7047     		bx	lr
+ 126              	.L25:
+ 127 0008 08B5     		push	{r3, lr}
+ 128 000a 00EB4000 		add	r0, r0, r0, lsl #1
+ 129 000e 034B     		ldr	r3, .L26
+ 130 0010 03EBC000 		add	r0, r3, r0, lsl #3
+ 131 0014 FFF7FEFF 		bl	hal_sci_deinit
+ 132 0018 08BD     		pop	{r3, pc}
+ 133              	.L27:
+ 134 001a 00BF     		.align	2
+ 135              	.L26:
+ 136 001c 00000000 		.word	.LANCHOR0
+ 138              		.section	.text.sci_set_config_parameter,"ax",%progbits
+ 139              		.align	1
+ 140              		.global	sci_set_config_parameter
+ 141              		.syntax unified
+ 142              		.thumb
+ 143              		.thumb_func
+ 144              		.fpu fpv4-sp-d16
+ 146              	sci_set_config_parameter:
+ 147              		@ args = 0, pretend = 0, frame = 0
+ 148              		@ frame_needed = 0, uses_anonymous_args = 0
+ 149 0000 0328     		cmp	r0, #3
+ 150 0002 01D9     		bls	.L35
+ 151 0004 0420     		movs	r0, #4
+ 152 0006 7047     		bx	lr
+ 153              	.L35:
+ 154 0008 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 155 000a 0446     		mov	r4, r0
+ 156 000c 0948     		ldr	r0, .L36
+ 157 000e 6500     		lsls	r5, r4, #1
+ 158 0010 2E19     		adds	r6, r5, r4
+ 159 0012 00EB8606 		add	r6, r0, r6, lsl #2
+ 160 0016 B768     		ldr	r7, [r6, #8]
+ 161 0018 3971     		strb	r1, [r7, #4]
+ 162 001a B168     		ldr	r1, [r6, #8]
+ 163 001c 4A71     		strb	r2, [r1, #5]
+ 164 001e B268     		ldr	r2, [r6, #8]
+ 165 0020 9371     		strb	r3, [r2, #6]
+ 166 0022 2046     		mov	r0, r4
+ 167 0024 FFF7FEFF 		bl	sci_deinit
+ 168 0028 2046     		mov	r0, r4
+ 169 002a FFF7FEFF 		bl	sci_init
+ 170 002e 0020     		movs	r0, #0
+ 171 0030 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 172              	.L37:
+ 173 0032 00BF     		.align	2
+ 174              	.L36:
+ 175 0034 00000000 		.word	struct_lpuart_config
+ 177              		.section	.text.sci_sleep,"ax",%progbits
+ 178              		.align	1
+ 179              		.global	sci_sleep
+ 180              		.syntax unified
+ 181              		.thumb
+ 182              		.thumb_func
+ 183              		.fpu fpv4-sp-d16
+ 185              	sci_sleep:
+ 186              		@ args = 0, pretend = 0, frame = 0
+ 187              		@ frame_needed = 0, uses_anonymous_args = 0
+ 188 0000 08B5     		push	{r3, lr}
+ 189 0002 FFF7FEFF 		bl	sci_deinit
+ 190 0006 08BD     		pop	{r3, pc}
+ 192              		.section	.text.sci_tx_blocking,"ax",%progbits
+ 193              		.align	1
+ 194              		.global	sci_tx_blocking
+ 195              		.syntax unified
+ 196              		.thumb
+ 197              		.thumb_func
+ 198              		.fpu fpv4-sp-d16
+ 200              	sci_tx_blocking:
+ 201              		@ args = 0, pretend = 0, frame = 0
+ 202              		@ frame_needed = 0, uses_anonymous_args = 0
+ 203 0000 0328     		cmp	r0, #3
+ 204 0002 01D9     		bls	.L47
+ 205 0004 0420     		movs	r0, #4
+ 206 0006 7047     		bx	lr
+ 207              	.L47:
+ 208 0008 10B5     		push	{r4, lr}
+ 209 000a 00EB4000 		add	r0, r0, r0, lsl #1
+ 210 000e 1E23     		movs	r3, #30
+ 211 0010 024C     		ldr	r4, .L48
+ 212 0012 04EBC000 		add	r0, r4, r0, lsl #3
+ 213 0016 FFF7FEFF 		bl	hal_sci_send_block
+ 214 001a 10BD     		pop	{r4, pc}
+ 215              	.L49:
+ 216              		.align	2
+ 217              	.L48:
+ 218 001c 00000000 		.word	.LANCHOR0
+ 220              		.section	.text.sci_tx,"ax",%progbits
+ 221              		.align	1
+ 222              		.global	sci_tx
+ 223              		.syntax unified
+ 224              		.thumb
+ 225              		.thumb_func
+ 226              		.fpu fpv4-sp-d16
+ 228              	sci_tx:
+ 229              		@ args = 0, pretend = 0, frame = 0
+ 230              		@ frame_needed = 0, uses_anonymous_args = 0
+ 231 0000 0328     		cmp	r0, #3
+ 232 0002 01D9     		bls	.L57
+ 233 0004 0420     		movs	r0, #4
+ 234 0006 7047     		bx	lr
+ 235              	.L57:
+ 236 0008 08B5     		push	{r3, lr}
+ 237 000a 00EB4000 		add	r0, r0, r0, lsl #1
+ 238 000e 034B     		ldr	r3, .L58
+ 239 0010 03EBC000 		add	r0, r3, r0, lsl #3
+ 240 0014 FFF7FEFF 		bl	hal_sci_send
+ 241 0018 08BD     		pop	{r3, pc}
+ 242              	.L59:
+ 243 001a 00BF     		.align	2
+ 244              	.L58:
+ 245 001c 00000000 		.word	.LANCHOR0
+ 247              		.section	.text.sci_rx_blocking,"ax",%progbits
+ 248              		.align	1
+ 249              		.global	sci_rx_blocking
+ 250              		.syntax unified
+ 251              		.thumb
+ 252              		.thumb_func
+ 253              		.fpu fpv4-sp-d16
+ 255              	sci_rx_blocking:
+ 256              		@ args = 0, pretend = 0, frame = 0
+ 257              		@ frame_needed = 0, uses_anonymous_args = 0
+ 258 0000 0328     		cmp	r0, #3
+ 259 0002 01D9     		bls	.L67
+ 260 0004 0420     		movs	r0, #4
+ 261 0006 7047     		bx	lr
+ 262              	.L67:
+ 263 0008 10B5     		push	{r4, lr}
+ 264 000a 00EB4000 		add	r0, r0, r0, lsl #1
+ 265 000e 1E23     		movs	r3, #30
+ 266 0010 024C     		ldr	r4, .L68
+ 267 0012 04EBC000 		add	r0, r4, r0, lsl #3
+ 268 0016 FFF7FEFF 		bl	hal_sci_receive_block
+ 269 001a 10BD     		pop	{r4, pc}
+ 270              	.L69:
+ 271              		.align	2
+ 272              	.L68:
+ 273 001c 00000000 		.word	.LANCHOR0
+ 275              		.section	.text.sci_rx,"ax",%progbits
+ 276              		.align	1
+ 277              		.global	sci_rx
+ 278              		.syntax unified
+ 279              		.thumb
+ 280              		.thumb_func
+ 281              		.fpu fpv4-sp-d16
+ 283              	sci_rx:
+ 284              		@ args = 0, pretend = 0, frame = 0
+ 285              		@ frame_needed = 0, uses_anonymous_args = 0
+ 286 0000 0328     		cmp	r0, #3
+ 287 0002 01D9     		bls	.L77
+ 288 0004 0420     		movs	r0, #4
+ 289 0006 7047     		bx	lr
+ 290              	.L77:
+ 291 0008 08B5     		push	{r3, lr}
+ 292 000a 00EB4000 		add	r0, r0, r0, lsl #1
+ 293 000e 034B     		ldr	r3, .L78
+ 294 0010 03EBC000 		add	r0, r3, r0, lsl #3
+ 295 0014 FFF7FEFF 		bl	hal_sci_receive
+ 296 0018 08BD     		pop	{r3, pc}
+ 297              	.L79:
+ 298 001a 00BF     		.align	2
+ 299              	.L78:
+ 300 001c 00000000 		.word	.LANCHOR0
+ 302              		.section	.text.sci_tx_status,"ax",%progbits
+ 303              		.align	1
+ 304              		.global	sci_tx_status
+ 305              		.syntax unified
+ 306              		.thumb
+ 307              		.thumb_func
+ 308              		.fpu fpv4-sp-d16
+ 310              	sci_tx_status:
+ 311              		@ args = 0, pretend = 0, frame = 0
+ 312              		@ frame_needed = 0, uses_anonymous_args = 0
+ 313 0000 0328     		cmp	r0, #3
+ 314 0002 01D9     		bls	.L87
+ 315 0004 0420     		movs	r0, #4
+ 316 0006 7047     		bx	lr
+ 317              	.L87:
+ 318 0008 08B5     		push	{r3, lr}
+ 319 000a 00EB4000 		add	r0, r0, r0, lsl #1
+ 320 000e 0021     		movs	r1, #0
+ 321 0010 024B     		ldr	r3, .L88
+ 322 0012 03EBC000 		add	r0, r3, r0, lsl #3
+ 323 0016 FFF7FEFF 		bl	hal_sci_send_status
+ 324 001a 08BD     		pop	{r3, pc}
+ 325              	.L89:
+ 326              		.align	2
+ 327              	.L88:
+ 328 001c 00000000 		.word	.LANCHOR0
+ 330              		.section	.text.sci_rx_status,"ax",%progbits
+ 331              		.align	1
+ 332              		.global	sci_rx_status
+ 333              		.syntax unified
+ 334              		.thumb
+ 335              		.thumb_func
+ 336              		.fpu fpv4-sp-d16
+ 338              	sci_rx_status:
+ 339              		@ args = 0, pretend = 0, frame = 0
+ 340              		@ frame_needed = 0, uses_anonymous_args = 0
+ 341 0000 0328     		cmp	r0, #3
+ 342 0002 01D9     		bls	.L97
+ 343 0004 0420     		movs	r0, #4
+ 344 0006 7047     		bx	lr
+ 345              	.L97:
+ 346 0008 08B5     		push	{r3, lr}
+ 347 000a 00EB4000 		add	r0, r0, r0, lsl #1
+ 348 000e 0021     		movs	r1, #0
+ 349 0010 024B     		ldr	r3, .L98
+ 350 0012 03EBC000 		add	r0, r3, r0, lsl #3
+ 351 0016 FFF7FEFF 		bl	hal_sci_receive_status
+ 352 001a 08BD     		pop	{r3, pc}
+ 353              	.L99:
+ 354              		.align	2
+ 355              	.L98:
+ 356 001c 00000000 		.word	.LANCHOR0
+ 358              		.section	.text.sci_tx_get_remaining_bytes,"ax",%progbits
+ 359              		.align	1
+ 360              		.global	sci_tx_get_remaining_bytes
+ 361              		.syntax unified
+ 362              		.thumb
+ 363              		.thumb_func
+ 364              		.fpu fpv4-sp-d16
+ 366              	sci_tx_get_remaining_bytes:
+ 367              		@ args = 0, pretend = 0, frame = 8
+ 368              		@ frame_needed = 0, uses_anonymous_args = 0
+ 369 0000 00B5     		push	{lr}
+ 370 0002 83B0     		sub	sp, sp, #12
+ 371 0004 4FF0FF33 		mov	r3, #-1
+ 372 0008 0193     		str	r3, [sp, #4]
+ 373 000a 0328     		cmp	r0, #3
+ 374 000c 0BD8     		bhi	.L102
+ 375 000e 00EB4000 		add	r0, r0, r0, lsl #1
+ 376 0012 01A9     		add	r1, sp, #4
+ 377 0014 054B     		ldr	r3, .L104
+ 378 0016 03EBC000 		add	r0, r3, r0, lsl #3
+ 379 001a FFF7FEFF 		bl	hal_sci_send_status
+ 380 001e 0198     		ldr	r0, [sp, #4]
+ 381              	.L100:
+ 382 0020 03B0     		add	sp, sp, #12
+ 383              		@ sp needed
+ 384 0022 5DF804FB 		ldr	pc, [sp], #4
+ 385              	.L102:
+ 386 0026 0420     		movs	r0, #4
+ 387 0028 FAE7     		b	.L100
+ 388              	.L105:
+ 389 002a 00BF     		.align	2
+ 390              	.L104:
+ 391 002c 00000000 		.word	.LANCHOR0
+ 393              		.section	.text.sci_rx_get_remaining_bytes,"ax",%progbits
+ 394              		.align	1
+ 395              		.global	sci_rx_get_remaining_bytes
+ 396              		.syntax unified
+ 397              		.thumb
+ 398              		.thumb_func
+ 399              		.fpu fpv4-sp-d16
+ 401              	sci_rx_get_remaining_bytes:
+ 402              		@ args = 0, pretend = 0, frame = 8
+ 403              		@ frame_needed = 0, uses_anonymous_args = 0
+ 404 0000 00B5     		push	{lr}
+ 405 0002 83B0     		sub	sp, sp, #12
+ 406 0004 4FF0FF33 		mov	r3, #-1
+ 407 0008 0193     		str	r3, [sp, #4]
+ 408 000a 0328     		cmp	r0, #3
+ 409 000c 0BD8     		bhi	.L108
+ 410 000e 00EB4000 		add	r0, r0, r0, lsl #1
+ 411 0012 01A9     		add	r1, sp, #4
+ 412 0014 054B     		ldr	r3, .L110
+ 413 0016 03EBC000 		add	r0, r3, r0, lsl #3
+ 414 001a FFF7FEFF 		bl	hal_sci_receive_status
+ 415 001e 0198     		ldr	r0, [sp, #4]
+ 416              	.L106:
+ 417 0020 03B0     		add	sp, sp, #12
+ 418              		@ sp needed
+ 419 0022 5DF804FB 		ldr	pc, [sp], #4
+ 420              	.L108:
+ 421 0026 0420     		movs	r0, #4
+ 422 0028 FAE7     		b	.L106
+ 423              	.L111:
+ 424 002a 00BF     		.align	2
+ 425              	.L110:
+ 426 002c 00000000 		.word	.LANCHOR0
+ 428              		.section	.text.user_sci_rx_full_callback,"ax",%progbits
+ 429              		.align	1
+ 430              		.weak	user_sci_rx_full_callback
+ 431              		.syntax unified
+ 432              		.thumb
+ 433              		.thumb_func
+ 434              		.fpu fpv4-sp-d16
+ 436              	user_sci_rx_full_callback:
+ 437              		@ args = 0, pretend = 0, frame = 0
+ 438              		@ frame_needed = 0, uses_anonymous_args = 0
+ 439              		@ link register save eliminated.
+ 440 0000 7047     		bx	lr
+ 442              		.section	.text.user_sci_continuous_transmit_callback,"ax",%progbits
+ 443              		.align	1
+ 444              		.weak	user_sci_continuous_transmit_callback
+ 445              		.syntax unified
+ 446              		.thumb
+ 447              		.thumb_func
+ 448              		.fpu fpv4-sp-d16
+ 450              	user_sci_continuous_transmit_callback:
+ 451              		@ args = 0, pretend = 0, frame = 0
+ 452              		@ frame_needed = 0, uses_anonymous_args = 0
+ 453              		@ link register save eliminated.
+ 454 0000 7047     		bx	lr
+ 456              		.section	.text.user_sci_tx_empty_callback,"ax",%progbits
+ 457              		.align	1
+ 458              		.weak	user_sci_tx_empty_callback
+ 459              		.syntax unified
+ 460              		.thumb
+ 461              		.thumb_func
+ 462              		.fpu fpv4-sp-d16
+ 464              	user_sci_tx_empty_callback:
+ 465              		@ args = 0, pretend = 0, frame = 0
+ 466              		@ frame_needed = 0, uses_anonymous_args = 0
+ 467              		@ link register save eliminated.
+ 468 0000 7047     		bx	lr
+ 470              		.section	.text.user_sci_transfer_complete_callback,"ax",%progbits
+ 471              		.align	1
+ 472              		.weak	user_sci_transfer_complete_callback
+ 473              		.syntax unified
+ 474              		.thumb
+ 475              		.thumb_func
+ 476              		.fpu fpv4-sp-d16
+ 478              	user_sci_transfer_complete_callback:
+ 479              		@ args = 0, pretend = 0, frame = 0
+ 480              		@ frame_needed = 0, uses_anonymous_args = 0
+ 481              		@ link register save eliminated.
+ 482 0000 7047     		bx	lr
+ 484              		.section	.text.UART_Callback,"ax",%progbits
+ 485              		.align	1
+ 486              		.global	UART_Callback
+ 487              		.syntax unified
+ 488              		.thumb
+ 489              		.thumb_func
+ 490              		.fpu fpv4-sp-d16
+ 492              	UART_Callback:
+ 493              		@ args = 0, pretend = 0, frame = 0
+ 494              		@ frame_needed = 0, uses_anonymous_args = 0
+ 495 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 496 0002 0446     		mov	r4, r0
+ 497 0004 012A     		cmp	r2, #1
+ 498 0006 17D0     		beq	.L117
+ 499 0008 53B2     		sxtb	r3, r2
+ 500 000a 13B1     		cbz	r3, .L118
+ 501 000c 022A     		cmp	r2, #2
+ 502 000e 1CD0     		beq	.L119
+ 503              	.L116:
+ 504 0010 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 505              	.L118:
+ 506 0012 124F     		ldr	r7, .L122
+ 507 0014 124D     		ldr	r5, .L122+4
+ 508 0016 4600     		lsls	r6, r0, #1
+ 509 0018 3318     		adds	r3, r6, r0
+ 510 001a 05EBC303 		add	r3, r5, r3, lsl #3
+ 511 001e 395C     		ldrb	r1, [r7, r0]	@ zero_extendqisi2
+ 512 0020 1879     		ldrb	r0, [r3, #4]	@ zero_extendqisi2
+ 513 0022 FFF7FEFF 		bl	user_sci_continuous_receive_callback
+ 514 0026 2644     		add	r6, r6, r4
+ 515 0028 05EBC605 		add	r5, r5, r6, lsl #3
+ 516 002c 0122     		movs	r2, #1
+ 517 002e 3919     		adds	r1, r7, r4
+ 518 0030 2879     		ldrb	r0, [r5, #4]	@ zero_extendqisi2
+ 519 0032 FFF7FEFF 		bl	LPUART_DRV_SetRxBuffer
+ 520 0036 EBE7     		b	.L116
+ 521              	.L117:
+ 522 0038 00EB4004 		add	r4, r0, r0, lsl #1
+ 523 003c 084B     		ldr	r3, .L122+4
+ 524 003e 03EBC404 		add	r4, r3, r4, lsl #3
+ 525 0042 2079     		ldrb	r0, [r4, #4]	@ zero_extendqisi2
+ 526 0044 FFF7FEFF 		bl	user_sci_tx_empty_callback
+ 527 0048 E2E7     		b	.L116
+ 528              	.L119:
+ 529 004a 00EB4004 		add	r4, r0, r0, lsl #1
+ 530 004e 044B     		ldr	r3, .L122+4
+ 531 0050 03EBC404 		add	r4, r3, r4, lsl #3
+ 532 0054 2079     		ldrb	r0, [r4, #4]	@ zero_extendqisi2
+ 533 0056 FFF7FEFF 		bl	user_sci_transfer_complete_callback
+ 534 005a D9E7     		b	.L116
+ 535              	.L123:
+ 536              		.align	2
+ 537              	.L122:
+ 538 005c 00000000 		.word	.LANCHOR1
+ 539 0060 00000000 		.word	.LANCHOR0
+ 541              		.section	.text.UART_Callback0,"ax",%progbits
+ 542              		.align	1
+ 543              		.global	UART_Callback0
+ 544              		.syntax unified
+ 545              		.thumb
+ 546              		.thumb_func
+ 547              		.fpu fpv4-sp-d16
+ 549              	UART_Callback0:
+ 550              		@ args = 0, pretend = 0, frame = 0
+ 551              		@ frame_needed = 0, uses_anonymous_args = 0
+ 552 0000 08B5     		push	{r3, lr}
+ 553 0002 1346     		mov	r3, r2
+ 554 0004 0A46     		mov	r2, r1
+ 555 0006 0146     		mov	r1, r0
+ 556 0008 0020     		movs	r0, #0
+ 557 000a FFF7FEFF 		bl	UART_Callback
+ 558 000e 08BD     		pop	{r3, pc}
+ 560              		.section	.text.UART_Callback1,"ax",%progbits
+ 561              		.align	1
+ 562              		.global	UART_Callback1
+ 563              		.syntax unified
+ 564              		.thumb
+ 565              		.thumb_func
+ 566              		.fpu fpv4-sp-d16
+ 568              	UART_Callback1:
+ 569              		@ args = 0, pretend = 0, frame = 0
+ 570              		@ frame_needed = 0, uses_anonymous_args = 0
+ 571 0000 08B5     		push	{r3, lr}
+ 572 0002 1346     		mov	r3, r2
+ 573 0004 0A46     		mov	r2, r1
+ 574 0006 0146     		mov	r1, r0
+ 575 0008 0120     		movs	r0, #1
+ 576 000a FFF7FEFF 		bl	UART_Callback
+ 577 000e 08BD     		pop	{r3, pc}
+ 579              		.section	.text.UART_Callback2,"ax",%progbits
+ 580              		.align	1
+ 581              		.global	UART_Callback2
+ 582              		.syntax unified
+ 583              		.thumb
+ 584              		.thumb_func
+ 585              		.fpu fpv4-sp-d16
+ 587              	UART_Callback2:
+ 588              		@ args = 0, pretend = 0, frame = 0
+ 589              		@ frame_needed = 0, uses_anonymous_args = 0
+ 590 0000 08B5     		push	{r3, lr}
+ 591 0002 1346     		mov	r3, r2
+ 592 0004 0A46     		mov	r2, r1
+ 593 0006 0146     		mov	r1, r0
+ 594 0008 0220     		movs	r0, #2
+ 595 000a FFF7FEFF 		bl	UART_Callback
+ 596 000e 08BD     		pop	{r3, pc}
+ 598              		.global	tx_buffer_8bit
+ 599              		.global	rx_buffer_8bit
+ 600              		.section	.bss.rx_buffer_8bit,"aw",%nobits
+ 601              		.align	2
+ 602              		.set	.LANCHOR1,. + 0
+ 605              	rx_buffer_8bit:
+ 606 0000 000000   		.space	3
+ 607              		.section	.bss.tx_buffer_8bit,"aw",%nobits
+ 608              		.align	2
+ 611              	tx_buffer_8bit:
+ 612 0000 000000   		.space	3
+ 613              		.section	.data.hal_sci_config,"aw"
+ 614              		.align	2
+ 615              		.set	.LANCHOR0,. + 0
+ 618              	hal_sci_config:
+ 619 0000 00000000 		.space	4
+ 620 0004 00       		.byte	0
+ 621 0005 000000   		.space	3
+ 622 0008 00C20100 		.word	115200
+ 623 000c 00000000 		.word	UART_Callback0
+ 624 0010 00000000 		.word	UART_Callback0
+ 625 0014 00000000 		.word	0
+ 626 0018 00000000 		.space	4
+ 627 001c 01       		.byte	1
+ 628 001d 000000   		.space	3
+ 629 0020 00C20100 		.word	115200
+ 630 0024 00000000 		.word	UART_Callback1
+ 631 0028 00000000 		.word	UART_Callback1
+ 632 002c 00000000 		.word	0
+ 633 0030 00000000 		.space	4
+ 634 0034 02       		.byte	2
+ 635 0035 000000   		.space	3
+ 636 0038 00C20100 		.word	115200
+ 637 003c 00000000 		.word	UART_Callback2
+ 638 0040 00000000 		.word	UART_Callback2
+ 639 0044 00000000 		.word	0
+ 640              		.ident	"GCC: (GNU Tools for Arm Embedded Processors 8-2019-q3-update) 8.3.1 20190703 (release) [gc

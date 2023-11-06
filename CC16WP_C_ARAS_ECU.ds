@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ApplicationDataChanged>false</ApplicationDataChanged>
+  <BuildActions />
+  <CanGateways />
+  <CanSettings>
+    <CanSetting xsi:type="CanFDSetting">
+      <CanBus>CAN_BUS_0</CanBus>
+      <CanBusId>0</CanBusId>
+      <FIFOSizeRX>20</FIFOSizeRX>
+      <FIFOSizeTX>20</FIFOSizeTX>
+      <ListenOnly>false</ListenOnly>
+      <SelectedSetting>500 kBit</SelectedSetting>
+      <Setting>
+        <Baudrate>500 kBit</Baudrate>
+        <BaudrateDefine>BIOS_CAN_500KBIT</BaudrateDefine>
+        <BusClock>0</BusClock>
+        <ClockSource>0</ClockSource>
+        <Comment />
+        <JumpWidth>3</JumpWidth>
+        <Name>500 kBit</Name>
+        <OscillatorClock>2</OscillatorClock>
+        <Prescaler>4</Prescaler>
+        <PropagationSegment>2</PropagationSegment>
+        <TimeSegment1>5</TimeSegment1>
+        <TimeSegment2>5</TimeSegment2>
+      </Setting>
+      <FDActive>false</FDActive>
+    </CanSetting>
+    <CanSetting xsi:type="CanFDSetting">
+      <CanBus>CAN_BUS_1</CanBus>
+      <CanBusId>1</CanBusId>
+      <FIFOSizeRX>20</FIFOSizeRX>
+      <FIFOSizeTX>20</FIFOSizeTX>
+      <ListenOnly>false</ListenOnly>
+      <SelectedSetting>500 kBit</SelectedSetting>
+      <Setting>
+        <Baudrate>500 kBit</Baudrate>
+        <BaudrateDefine>BIOS_CAN_500KBIT</BaudrateDefine>
+        <BusClock>0</BusClock>
+        <ClockSource>0</ClockSource>
+        <Comment />
+        <JumpWidth>3</JumpWidth>
+        <Name>500 kBit</Name>
+        <OscillatorClock>2</OscillatorClock>
+        <Prescaler>4</Prescaler>
+        <PropagationSegment>2</PropagationSegment>
+        <TimeSegment1>5</TimeSegment1>
+        <TimeSegment2>5</TimeSegment2>
+      </Setting>
+      <FDActive>false</FDActive>
+    </CanSetting>
+  </CanSettings>
+  <CompilerPath />
+  <ASPath>C:\Users\theno\AppData\Local\ApplicsStudio\app-4.8.0</ASPath>
+  <SystemXtalMhz>40</SystemXtalMhz>
+  <SystemHardware>S32K148</SystemHardware>
+  <FileGenerationPreferences>
+    <FileGenerationPreference>
+      <Option>AutoGenerate</Option>
+      <Type>CanCode</Type>
+    </FileGenerationPreference>
+    <FileGenerationPreference>
+      <Option>AutoGenerate</Option>
+      <Type>DSLConfig</Type>
+    </FileGenerationPreference>
+    <FileGenerationPreference>
+      <Option>AutoGenerate</Option>
+      <Type>IoTables</Type>
+    </FileGenerationPreference>
+    <FileGenerationPreference>
+      <Option>AutoGenerate</Option>
+      <Type>LDFCode</Type>
+    </FileGenerationPreference>
+    <FileGenerationPreference>
+      <Option>AutoGenerate</Option>
+      <Type>MHardwareCode</Type>
+    </FileGenerationPreference>
+    <FileGenerationPreference>
+      <Option>AutoGenerate</Option>
+      <Type>IoVariables</Type>
+    </FileGenerationPreference>
+  </FileGenerationPreferences>
+  <FlashPageSettings>
+    <InterfaceExtra>0ß´´</InterfaceExtra>
+    <SelectedBaudrate>125 kBit</SelectedBaudrate>
+    <SelectedCanBus>Manual</SelectedCanBus>
+    <SelectedHardwareInterface>0 = PCAN Light USB</SelectedHardwareInterface>
+  </FlashPageSettings>
+  <HardwareDrawingNumber>1.154.302.00</HardwareDrawingNumber>
+  <HardwareRevision>C</HardwareRevision>
+  <IgnoreProjectUpdate>NEVER</IgnoreProjectUpdate>
+  <LastBuild>2023-10-09T11:15:52.6492712+02:00</LastBuild>
+  <LibraryVersion />
+  <ModuleName>CC16WP Application</ModuleName>
+  <PartNumber>401081</PartNumber>
+  <ProjectName>CC16WP_C_ARAS_ECU</ProjectName>
+  <StructureVersion>1</StructureVersion>
+  <Version>V0.0.1</Version>
+</Project>

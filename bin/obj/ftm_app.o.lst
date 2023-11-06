@@ -1,0 +1,285 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"ftm_app.c"
+  14              		.text
+  15              		.section	.text.change_pin_to_ftm,"ax",%progbits
+  16              		.align	1
+  17              		.global	change_pin_to_ftm
+  18              		.arch armv7e-m
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  22              		.fpu fpv4-sp-d16
+  24              	change_pin_to_ftm:
+  25              		@ args = 0, pretend = 0, frame = 0
+  26              		@ frame_needed = 0, uses_anonymous_args = 0
+  27 0000 5828     		cmp	r0, #88
+  28 0002 01D9     		bls	.L8
+  29 0004 0020     		movs	r0, #0
+  30 0006 7047     		bx	lr
+  31              	.L8:
+  32 0008 10B5     		push	{r4, lr}
+  33 000a 074C     		ldr	r4, .L9
+  34 000c 4300     		lsls	r3, r0, #1
+  35 000e 1918     		adds	r1, r3, r0
+  36 0010 04EBC101 		add	r1, r4, r1, lsl #3
+  37 0014 1844     		add	r0, r0, r3
+  38 0016 CA7A     		ldrb	r2, [r1, #11]	@ zero_extendqisi2
+  39 0018 4968     		ldr	r1, [r1, #4]
+  40 001a 54F83000 		ldr	r0, [r4, r0, lsl #3]
+  41 001e FFF7FEFF 		bl	PINS_SetMuxModeSel
+  42 0022 0120     		movs	r0, #1
+  43 0024 10BD     		pop	{r4, pc}
+  44              	.L10:
+  45 0026 00BF     		.align	2
+  46              	.L9:
+  47 0028 00000000 		.word	g_pin_mux_InitConfigArr
+  49              		.section	.text.change_pin_to_adc,"ax",%progbits
+  50              		.align	1
+  51              		.global	change_pin_to_adc
+  52              		.syntax unified
+  53              		.thumb
+  54              		.thumb_func
+  55              		.fpu fpv4-sp-d16
+  57              	change_pin_to_adc:
+  58              		@ args = 0, pretend = 0, frame = 0
+  59              		@ frame_needed = 0, uses_anonymous_args = 0
+  60 0000 5828     		cmp	r0, #88
+  61 0002 01D9     		bls	.L18
+  62 0004 0020     		movs	r0, #0
+  63 0006 7047     		bx	lr
+  64              	.L18:
+  65 0008 10B5     		push	{r4, lr}
+  66 000a 074C     		ldr	r4, .L19
+  67 000c 4300     		lsls	r3, r0, #1
+  68 000e 1918     		adds	r1, r3, r0
+  69 0010 04EBC101 		add	r1, r4, r1, lsl #3
+  70 0014 1844     		add	r0, r0, r3
+  71 0016 0022     		movs	r2, #0
+  72 0018 4968     		ldr	r1, [r1, #4]
+  73 001a 54F83000 		ldr	r0, [r4, r0, lsl #3]
+  74 001e FFF7FEFF 		bl	PINS_SetMuxModeSel
+  75 0022 0120     		movs	r0, #1
+  76 0024 10BD     		pop	{r4, pc}
+  77              	.L20:
+  78 0026 00BF     		.align	2
+  79              	.L19:
+  80 0028 00000000 		.word	g_pin_mux_InitConfigArr
+  82              		.section	.text.encoder_Callback,"ax",%progbits
+  83              		.align	1
+  84              		.global	encoder_Callback
+  85              		.syntax unified
+  86              		.thumb
+  87              		.thumb_func
+  88              		.fpu fpv4-sp-d16
+  90              	encoder_Callback:
+  91              		@ args = 0, pretend = 0, frame = 0
+  92              		@ frame_needed = 0, uses_anonymous_args = 0
+  93 0000 08B5     		push	{r3, lr}
+  94 0002 FFF7FEFF 		bl	hal_freq_process_encoder
+  95 0006 08BD     		pop	{r3, pc}
+  97              		.section	.text.FTM_IRQHandler,"ax",%progbits
+  98              		.align	1
+  99              		.global	FTM_IRQHandler
+ 100              		.syntax unified
+ 101              		.thumb
+ 102              		.thumb_func
+ 103              		.fpu fpv4-sp-d16
+ 105              	FTM_IRQHandler:
+ 106              		@ args = 0, pretend = 0, frame = 0
+ 107              		@ frame_needed = 0, uses_anonymous_args = 0
+ 108 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 109 0004 0746     		mov	r7, r0
+ 110 0006 154D     		ldr	r5, .L29
+ 111 0008 0024     		movs	r4, #0
+ 112 000a 154E     		ldr	r6, .L29+4
+ 113 000c A046     		mov	r8, r4
+ 114 000e 03E0     		b	.L25
+ 115              	.L24:
+ 116 0010 0134     		adds	r4, r4, #1
+ 117 0012 1035     		adds	r5, r5, #16
+ 118 0014 082C     		cmp	r4, #8
+ 119 0016 1FD0     		beq	.L28
+ 120              	.L25:
+ 121 0018 04EB4403 		add	r3, r4, r4, lsl #1
+ 122 001c 9B5D     		ldrb	r3, [r3, r6]	@ zero_extendqisi2
+ 123 001e BB42     		cmp	r3, r7
+ 124 0020 F6D1     		bne	.L24
+ 125 0022 2A88     		ldrh	r2, [r5]
+ 126 0024 002A     		cmp	r2, #0
+ 127 0026 F3D0     		beq	.L24
+ 128 0028 AB88     		ldrh	r3, [r5, #4]
+ 129 002a 0133     		adds	r3, r3, #1
+ 130 002c 9BB2     		uxth	r3, r3
+ 131 002e AB80     		strh	r3, [r5, #4]	@ movhi
+ 132 0030 6988     		ldrh	r1, [r5, #2]
+ 133 0032 0131     		adds	r1, r1, #1
+ 134 0034 B3EB610F 		cmp	r3, r1, asr #1
+ 135 0038 EADB     		blt	.L24
+ 136 003a A5F80480 		strh	r8, [r5, #4]	@ movhi
+ 137 003e AB7A     		ldrb	r3, [r5, #10]	@ zero_extendqisi2
+ 138 0040 5B42     		rsbs	r3, r3, #0
+ 139 0042 5BB2     		sxtb	r3, r3
+ 140 0044 AB72     		strb	r3, [r5, #10]
+ 141 0046 13FB02F2 		smulbb	r2, r3, r2
+ 142 004a E988     		ldrh	r1, [r5, #6]
+ 143 004c 1144     		add	r1, r1, r2
+ 144 004e 89B2     		uxth	r1, r1
+ 145 0050 A0B2     		uxth	r0, r4
+ 146 0052 FFF7FEFF 		bl	hal_pwm_set_duty
+ 147 0056 DBE7     		b	.L24
+ 148              	.L28:
+ 149 0058 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 150              	.L30:
+ 151              		.align	2
+ 152              	.L29:
+ 153 005c 00000000 		.word	pwm_vals_t
+ 154 0060 00000000 		.word	struct_ftm_config_tbl
+ 156              		.section	.text.FTM0_IRQHandler,"ax",%progbits
+ 157              		.align	1
+ 158              		.global	FTM0_IRQHandler
+ 159              		.syntax unified
+ 160              		.thumb
+ 161              		.thumb_func
+ 162              		.fpu fpv4-sp-d16
+ 164              	FTM0_IRQHandler:
+ 165              		@ args = 0, pretend = 0, frame = 0
+ 166              		@ frame_needed = 0, uses_anonymous_args = 0
+ 167 0000 08B5     		push	{r3, lr}
+ 168 0002 0020     		movs	r0, #0
+ 169 0004 FFF7FEFF 		bl	FTM_IRQHandler
+ 170 0008 4FF40071 		mov	r1, #512
+ 171 000c 0020     		movs	r0, #0
+ 172 000e FFF7FEFF 		bl	FTM_DRV_ClearStatusFlags
+ 173 0012 08BD     		pop	{r3, pc}
+ 175              		.section	.text.FTM1_IRQHandler,"ax",%progbits
+ 176              		.align	1
+ 177              		.global	FTM1_IRQHandler
+ 178              		.syntax unified
+ 179              		.thumb
+ 180              		.thumb_func
+ 181              		.fpu fpv4-sp-d16
+ 183              	FTM1_IRQHandler:
+ 184              		@ args = 0, pretend = 0, frame = 0
+ 185              		@ frame_needed = 0, uses_anonymous_args = 0
+ 186 0000 08B5     		push	{r3, lr}
+ 187 0002 0120     		movs	r0, #1
+ 188 0004 FFF7FEFF 		bl	FTM_IRQHandler
+ 189 0008 4FF40071 		mov	r1, #512
+ 190 000c 0120     		movs	r0, #1
+ 191 000e FFF7FEFF 		bl	FTM_DRV_ClearStatusFlags
+ 192 0012 08BD     		pop	{r3, pc}
+ 194              		.section	.text.FTM2_IRQHandler,"ax",%progbits
+ 195              		.align	1
+ 196              		.global	FTM2_IRQHandler
+ 197              		.syntax unified
+ 198              		.thumb
+ 199              		.thumb_func
+ 200              		.fpu fpv4-sp-d16
+ 202              	FTM2_IRQHandler:
+ 203              		@ args = 0, pretend = 0, frame = 0
+ 204              		@ frame_needed = 0, uses_anonymous_args = 0
+ 205 0000 08B5     		push	{r3, lr}
+ 206 0002 0220     		movs	r0, #2
+ 207 0004 FFF7FEFF 		bl	FTM_IRQHandler
+ 208 0008 4FF40071 		mov	r1, #512
+ 209 000c 0220     		movs	r0, #2
+ 210 000e FFF7FEFF 		bl	FTM_DRV_ClearStatusFlags
+ 211 0012 08BD     		pop	{r3, pc}
+ 213              		.section	.text.FTM3_IRQHandler,"ax",%progbits
+ 214              		.align	1
+ 215              		.global	FTM3_IRQHandler
+ 216              		.syntax unified
+ 217              		.thumb
+ 218              		.thumb_func
+ 219              		.fpu fpv4-sp-d16
+ 221              	FTM3_IRQHandler:
+ 222              		@ args = 0, pretend = 0, frame = 0
+ 223              		@ frame_needed = 0, uses_anonymous_args = 0
+ 224 0000 08B5     		push	{r3, lr}
+ 225 0002 0320     		movs	r0, #3
+ 226 0004 FFF7FEFF 		bl	FTM_IRQHandler
+ 227 0008 4FF40071 		mov	r1, #512
+ 228 000c 0320     		movs	r0, #3
+ 229 000e FFF7FEFF 		bl	FTM_DRV_ClearStatusFlags
+ 230 0012 08BD     		pop	{r3, pc}
+ 232              		.section	.text.FTM4_IRQHandler,"ax",%progbits
+ 233              		.align	1
+ 234              		.global	FTM4_IRQHandler
+ 235              		.syntax unified
+ 236              		.thumb
+ 237              		.thumb_func
+ 238              		.fpu fpv4-sp-d16
+ 240              	FTM4_IRQHandler:
+ 241              		@ args = 0, pretend = 0, frame = 0
+ 242              		@ frame_needed = 0, uses_anonymous_args = 0
+ 243 0000 08B5     		push	{r3, lr}
+ 244 0002 0420     		movs	r0, #4
+ 245 0004 FFF7FEFF 		bl	FTM_IRQHandler
+ 246 0008 4FF40071 		mov	r1, #512
+ 247 000c 0420     		movs	r0, #4
+ 248 000e FFF7FEFF 		bl	FTM_DRV_ClearStatusFlags
+ 249 0012 08BD     		pop	{r3, pc}
+ 251              		.section	.text.FTM5_IRQHandler,"ax",%progbits
+ 252              		.align	1
+ 253              		.global	FTM5_IRQHandler
+ 254              		.syntax unified
+ 255              		.thumb
+ 256              		.thumb_func
+ 257              		.fpu fpv4-sp-d16
+ 259              	FTM5_IRQHandler:
+ 260              		@ args = 0, pretend = 0, frame = 0
+ 261              		@ frame_needed = 0, uses_anonymous_args = 0
+ 262 0000 08B5     		push	{r3, lr}
+ 263 0002 0520     		movs	r0, #5
+ 264 0004 FFF7FEFF 		bl	FTM_IRQHandler
+ 265 0008 4FF40071 		mov	r1, #512
+ 266 000c 0520     		movs	r0, #5
+ 267 000e FFF7FEFF 		bl	FTM_DRV_ClearStatusFlags
+ 268 0012 08BD     		pop	{r3, pc}
+ 270              		.section	.text.FTM6_IRQHandler,"ax",%progbits
+ 271              		.align	1
+ 272              		.global	FTM6_IRQHandler
+ 273              		.syntax unified
+ 274              		.thumb
+ 275              		.thumb_func
+ 276              		.fpu fpv4-sp-d16
+ 278              	FTM6_IRQHandler:
+ 279              		@ args = 0, pretend = 0, frame = 0
+ 280              		@ frame_needed = 0, uses_anonymous_args = 0
+ 281 0000 08B5     		push	{r3, lr}
+ 282 0002 0620     		movs	r0, #6
+ 283 0004 FFF7FEFF 		bl	FTM_IRQHandler
+ 284 0008 4FF40071 		mov	r1, #512
+ 285 000c 0620     		movs	r0, #6
+ 286 000e FFF7FEFF 		bl	FTM_DRV_ClearStatusFlags
+ 287 0012 08BD     		pop	{r3, pc}
+ 289              		.section	.text.FTM7_IRQHandler,"ax",%progbits
+ 290              		.align	1
+ 291              		.global	FTM7_IRQHandler
+ 292              		.syntax unified
+ 293              		.thumb
+ 294              		.thumb_func
+ 295              		.fpu fpv4-sp-d16
+ 297              	FTM7_IRQHandler:
+ 298              		@ args = 0, pretend = 0, frame = 0
+ 299              		@ frame_needed = 0, uses_anonymous_args = 0
+ 300 0000 08B5     		push	{r3, lr}
+ 301 0002 0720     		movs	r0, #7
+ 302 0004 FFF7FEFF 		bl	FTM_IRQHandler
+ 303 0008 4FF40071 		mov	r1, #512
+ 304 000c 0720     		movs	r0, #7
+ 305 000e FFF7FEFF 		bl	FTM_DRV_ClearStatusFlags
+ 306 0012 08BD     		pop	{r3, pc}
+ 308              		.comm	pwm_vals_t,144,4
+ 309              		.ident	"GCC: (GNU Tools for Arm Embedded Processors 8-2019-q3-update) 8.3.1 20190703 (release) [gc

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DSInterface xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <AvailableSCIBuses />
+  <Buses />
+  <OutputDirectory>C:\Users\theno\Documents\VSB\Ing\AŘAS\aras_project_suc0103\CC16WP_C_ARAS_ECU\src\ds\lin</OutputDirectory>
+  <ProjectDirectory>C:\Users\theno\Documents\VSB\Ing\AŘAS\aras_project_suc0103\CC16WP_C_ARAS_ECU</ProjectDirectory>
+  <SCIBusToEnums />
+  <TakenSCIBuses />
+  <Target>S32K</Target>
+</DSInterface>

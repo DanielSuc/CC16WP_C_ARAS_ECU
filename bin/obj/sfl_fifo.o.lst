@@ -1,0 +1,420 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"sfl_fifo.c"
+  14              		.text
+  15              		.section	.text.sfl_fifo_init,"ax",%progbits
+  16              		.align	1
+  17              		.global	sfl_fifo_init
+  18              		.arch armv7e-m
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  22              		.fpu fpv4-sp-d16
+  24              	sfl_fifo_init:
+  25              		@ args = 0, pretend = 0, frame = 0
+  26              		@ frame_needed = 0, uses_anonymous_args = 0
+  27              		@ link register save eliminated.
+  28 0000 0346     		mov	r3, r0
+  29 0002 58B1     		cbz	r0, .L3
+  30 0004 61B1     		cbz	r1, .L4
+  31 0006 6AB1     		cbz	r2, .L5
+  32 0008 0020     		movs	r0, #0
+  33 000a 1860     		str	r0, [r3]
+  34 000c 1961     		str	r1, [r3, #16]
+  35 000e 5860     		str	r0, [r3, #4]
+  36 0010 9860     		str	r0, [r3, #8]
+  37 0012 1875     		strb	r0, [r3, #20]
+  38 0014 5875     		strb	r0, [r3, #21]
+  39 0016 9875     		strb	r0, [r3, #22]
+  40 0018 DA60     		str	r2, [r3, #12]
+  41 001a 7047     		bx	lr
+  42              	.L3:
+  43 001c 0120     		movs	r0, #1
+  44 001e 7047     		bx	lr
+  45              	.L4:
+  46 0020 0120     		movs	r0, #1
+  47 0022 7047     		bx	lr
+  48              	.L5:
+  49 0024 0120     		movs	r0, #1
+  50 0026 7047     		bx	lr
+  52              		.section	.text.sfl_fifo_get_count,"ax",%progbits
+  53              		.align	1
+  54              		.global	sfl_fifo_get_count
+  55              		.syntax unified
+  56              		.thumb
+  57              		.thumb_func
+  58              		.fpu fpv4-sp-d16
+  60              	sfl_fifo_get_count:
+  61              		@ args = 0, pretend = 0, frame = 0
+  62              		@ frame_needed = 0, uses_anonymous_args = 0
+  63              		@ link register save eliminated.
+  64 0000 0068     		ldr	r0, [r0]
+  65 0002 7047     		bx	lr
+  67              		.section	.text.sfl_fifo_get_free,"ax",%progbits
+  68              		.align	1
+  69              		.global	sfl_fifo_get_free
+  70              		.syntax unified
+  71              		.thumb
+  72              		.thumb_func
+  73              		.fpu fpv4-sp-d16
+  75              	sfl_fifo_get_free:
+  76              		@ args = 0, pretend = 0, frame = 0
+  77              		@ frame_needed = 0, uses_anonymous_args = 0
+  78              		@ link register save eliminated.
+  79 0000 0269     		ldr	r2, [r0, #16]
+  80 0002 0068     		ldr	r0, [r0]
+  81 0004 101A     		subs	r0, r2, r0
+  82 0006 7047     		bx	lr
+  84              		.section	.text.sfl_fifo_lock_read,"ax",%progbits
+  85              		.align	1
+  86              		.global	sfl_fifo_lock_read
+  87              		.syntax unified
+  88              		.thumb
+  89              		.thumb_func
+  90              		.fpu fpv4-sp-d16
+  92              	sfl_fifo_lock_read:
+  93              		@ args = 0, pretend = 0, frame = 0
+  94              		@ frame_needed = 0, uses_anonymous_args = 0
+  95 0000 10B5     		push	{r4, lr}
+  96 0002 0446     		mov	r4, r0
+  97 0004 FFF7FEFF 		bl	hal_sys_disable_all_interrupts
+  98 0008 0123     		movs	r3, #1
+  99 000a A375     		strb	r3, [r4, #22]
+ 100 000c FFF7FEFF 		bl	hal_sys_enable_all_interrupts
+ 101 0010 10BD     		pop	{r4, pc}
+ 103              		.section	.text.sfl_fifo_unlock_read,"ax",%progbits
+ 104              		.align	1
+ 105              		.global	sfl_fifo_unlock_read
+ 106              		.syntax unified
+ 107              		.thumb
+ 108              		.thumb_func
+ 109              		.fpu fpv4-sp-d16
+ 111              	sfl_fifo_unlock_read:
+ 112              		@ args = 0, pretend = 0, frame = 0
+ 113              		@ frame_needed = 0, uses_anonymous_args = 0
+ 114 0000 10B5     		push	{r4, lr}
+ 115 0002 0446     		mov	r4, r0
+ 116 0004 FFF7FEFF 		bl	hal_sys_disable_all_interrupts
+ 117 0008 0023     		movs	r3, #0
+ 118 000a A375     		strb	r3, [r4, #22]
+ 119 000c FFF7FEFF 		bl	hal_sys_enable_all_interrupts
+ 120 0010 10BD     		pop	{r4, pc}
+ 122              		.section	.text.sfl_fifo_get_read_lock,"ax",%progbits
+ 123              		.align	1
+ 124              		.global	sfl_fifo_get_read_lock
+ 125              		.syntax unified
+ 126              		.thumb
+ 127              		.thumb_func
+ 128              		.fpu fpv4-sp-d16
+ 130              	sfl_fifo_get_read_lock:
+ 131              		@ args = 0, pretend = 0, frame = 0
+ 132              		@ frame_needed = 0, uses_anonymous_args = 0
+ 133 0000 10B5     		push	{r4, lr}
+ 134 0002 0446     		mov	r4, r0
+ 135 0004 FFF7FEFF 		bl	hal_sys_disable_all_interrupts
+ 136 0008 A47D     		ldrb	r4, [r4, #22]	@ zero_extendqisi2
+ 137 000a FFF7FEFF 		bl	hal_sys_enable_all_interrupts
+ 138 000e 2046     		mov	r0, r4
+ 139 0010 10BD     		pop	{r4, pc}
+ 141              		.section	.text.sfl_fifo_put,"ax",%progbits
+ 142              		.align	1
+ 143              		.global	sfl_fifo_put
+ 144              		.syntax unified
+ 145              		.thumb
+ 146              		.thumb_func
+ 147              		.fpu fpv4-sp-d16
+ 149              	sfl_fifo_put:
+ 150              		@ args = 0, pretend = 0, frame = 0
+ 151              		@ frame_needed = 0, uses_anonymous_args = 0
+ 152 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 153 0002 0446     		mov	r4, r0
+ 154 0004 0F46     		mov	r7, r1
+ 155 0006 1646     		mov	r6, r2
+ 156 0008 FFF7FEFF 		bl	hal_sys_disable_all_interrupts
+ 157 000c 257D     		ldrb	r5, [r4, #20]	@ zero_extendqisi2
+ 158 000e 0DBB     		cbnz	r5, .L18
+ 159 0010 0123     		movs	r3, #1
+ 160 0012 2375     		strb	r3, [r4, #20]
+ 161 0014 2368     		ldr	r3, [r4]
+ 162 0016 0133     		adds	r3, r3, #1
+ 163 0018 2269     		ldr	r2, [r4, #16]
+ 164 001a 9342     		cmp	r3, r2
+ 165 001c 06D9     		bls	.L21
+ 166 001e 0325     		movs	r5, #3
+ 167              	.L16:
+ 168 0020 0023     		movs	r3, #0
+ 169 0022 2375     		strb	r3, [r4, #20]
+ 170              	.L15:
+ 171 0024 FFF7FEFF 		bl	hal_sys_enable_all_interrupts
+ 172 0028 2846     		mov	r0, r5
+ 173 002a F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 174              	.L21:
+ 175 002c E368     		ldr	r3, [r4, #12]
+ 176 002e 6068     		ldr	r0, [r4, #4]
+ 177 0030 1A46     		mov	r2, r3
+ 178 0032 3946     		mov	r1, r7
+ 179 0034 00FB0360 		mla	r0, r0, r3, r6
+ 180 0038 FFF7FEFF 		bl	memcpy
+ 181 003c 6368     		ldr	r3, [r4, #4]
+ 182 003e 0133     		adds	r3, r3, #1
+ 183 0040 6360     		str	r3, [r4, #4]
+ 184 0042 2269     		ldr	r2, [r4, #16]
+ 185 0044 9342     		cmp	r3, r2
+ 186 0046 24BF     		itt	cs
+ 187 0048 0023     		movcs	r3, #0
+ 188 004a 6360     		strcs	r3, [r4, #4]
+ 189 004c 2368     		ldr	r3, [r4]
+ 190 004e 0133     		adds	r3, r3, #1
+ 191 0050 2360     		str	r3, [r4]
+ 192 0052 E5E7     		b	.L16
+ 193              	.L18:
+ 194 0054 0225     		movs	r5, #2
+ 195 0056 E5E7     		b	.L15
+ 197              		.section	.text.sfl_fifo_get,"ax",%progbits
+ 198              		.align	1
+ 199              		.global	sfl_fifo_get
+ 200              		.syntax unified
+ 201              		.thumb
+ 202              		.thumb_func
+ 203              		.fpu fpv4-sp-d16
+ 205              	sfl_fifo_get:
+ 206              		@ args = 0, pretend = 0, frame = 0
+ 207              		@ frame_needed = 0, uses_anonymous_args = 0
+ 208 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 209 0002 0446     		mov	r4, r0
+ 210 0004 0E46     		mov	r6, r1
+ 211 0006 1746     		mov	r7, r2
+ 212 0008 FFF7FEFF 		bl	hal_sys_disable_all_interrupts
+ 213 000c 657D     		ldrb	r5, [r4, #21]	@ zero_extendqisi2
+ 214 000e F5B9     		cbnz	r5, .L26
+ 215 0010 0123     		movs	r3, #1
+ 216 0012 6375     		strb	r3, [r4, #21]
+ 217 0014 2368     		ldr	r3, [r4]
+ 218 0016 33B9     		cbnz	r3, .L29
+ 219 0018 0425     		movs	r5, #4
+ 220              	.L24:
+ 221 001a 0023     		movs	r3, #0
+ 222 001c 6375     		strb	r3, [r4, #21]
+ 223              	.L23:
+ 224 001e FFF7FEFF 		bl	hal_sys_enable_all_interrupts
+ 225 0022 2846     		mov	r0, r5
+ 226 0024 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 227              	.L29:
+ 228 0026 E368     		ldr	r3, [r4, #12]
+ 229 0028 A168     		ldr	r1, [r4, #8]
+ 230 002a 1A46     		mov	r2, r3
+ 231 002c 01FB0371 		mla	r1, r1, r3, r7
+ 232 0030 3046     		mov	r0, r6
+ 233 0032 FFF7FEFF 		bl	memcpy
+ 234 0036 A368     		ldr	r3, [r4, #8]
+ 235 0038 0133     		adds	r3, r3, #1
+ 236 003a A360     		str	r3, [r4, #8]
+ 237 003c 2269     		ldr	r2, [r4, #16]
+ 238 003e 9342     		cmp	r3, r2
+ 239 0040 24BF     		itt	cs
+ 240 0042 0023     		movcs	r3, #0
+ 241 0044 A360     		strcs	r3, [r4, #8]
+ 242 0046 2368     		ldr	r3, [r4]
+ 243 0048 013B     		subs	r3, r3, #1
+ 244 004a 2360     		str	r3, [r4]
+ 245 004c E5E7     		b	.L24
+ 246              	.L26:
+ 247 004e 0225     		movs	r5, #2
+ 248 0050 E5E7     		b	.L23
+ 250              		.section	.text.sfl_fifo_get_preview,"ax",%progbits
+ 251              		.align	1
+ 252              		.global	sfl_fifo_get_preview
+ 253              		.syntax unified
+ 254              		.thumb
+ 255              		.thumb_func
+ 256              		.fpu fpv4-sp-d16
+ 258              	sfl_fifo_get_preview:
+ 259              		@ args = 0, pretend = 0, frame = 0
+ 260              		@ frame_needed = 0, uses_anonymous_args = 0
+ 261 0000 70B5     		push	{r4, r5, r6, lr}
+ 262 0002 457D     		ldrb	r5, [r0, #21]	@ zero_extendqisi2
+ 263 0004 A5B9     		cbnz	r5, .L33
+ 264 0006 1646     		mov	r6, r2
+ 265 0008 0B46     		mov	r3, r1
+ 266 000a 0446     		mov	r4, r0
+ 267 000c 0122     		movs	r2, #1
+ 268 000e 4275     		strb	r2, [r0, #21]
+ 269 0010 0268     		ldr	r2, [r0]
+ 270 0012 22B9     		cbnz	r2, .L36
+ 271 0014 0425     		movs	r5, #4
+ 272              	.L32:
+ 273 0016 0023     		movs	r3, #0
+ 274 0018 6375     		strb	r3, [r4, #21]
+ 275              	.L31:
+ 276 001a 2846     		mov	r0, r5
+ 277 001c 70BD     		pop	{r4, r5, r6, pc}
+ 278              	.L36:
+ 279 001e C168     		ldr	r1, [r0, #12]
+ 280 0020 8068     		ldr	r0, [r0, #8]
+ 281 0022 0A46     		mov	r2, r1
+ 282 0024 00FB0161 		mla	r1, r0, r1, r6
+ 283 0028 1846     		mov	r0, r3
+ 284 002a FFF7FEFF 		bl	memcpy
+ 285 002e F2E7     		b	.L32
+ 286              	.L33:
+ 287 0030 0225     		movs	r5, #2
+ 288 0032 F2E7     		b	.L31
+ 290              		.section	.text.sfl_fifo_search,"ax",%progbits
+ 291              		.align	1
+ 292              		.global	sfl_fifo_search
+ 293              		.syntax unified
+ 294              		.thumb
+ 295              		.thumb_func
+ 296              		.fpu fpv4-sp-d16
+ 298              	sfl_fifo_search:
+ 299              		@ args = 0, pretend = 0, frame = 0
+ 300              		@ frame_needed = 0, uses_anonymous_args = 0
+ 301 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 302 0004 9246     		mov	r10, r2
+ 303 0006 9946     		mov	r9, r3
+ 304 0008 0A68     		ldr	r2, [r1]
+ 305 000a 8B68     		ldr	r3, [r1, #8]
+ 306 000c CF68     		ldr	r7, [r1, #12]
+ 307 000e D1F810B0 		ldr	fp, [r1, #16]
+ 308 0012 4FF0FF31 		mov	r1, #-1
+ 309 0016 CAF80010 		str	r1, [r10]
+ 310 001a 32B3     		cbz	r2, .L46
+ 311 001c 07FB03F8 		mul	r8, r7, r3
+ 312 0020 4FF0000E 		mov	lr, #0
+ 313 0024 06E0     		b	.L39
+ 314              	.L45:
+ 315 0026 CAF80030 		str	r3, [r10]
+ 316 002a 9646     		mov	lr, r2
+ 317              	.L43:
+ 318 002c 0EF1010E 		add	lr, lr, #1
+ 319 0030 7245     		cmp	r2, lr
+ 320 0032 1CD9     		bls	.L47
+ 321              	.L39:
+ 322 0034 002F     		cmp	r7, #0
+ 323 0036 F6D0     		beq	.L45
+ 324 0038 0026     		movs	r6, #0
+ 325 003a 3146     		mov	r1, r6
+ 326 003c 09EB080C 		add	ip, r9, r8
+ 327              	.L41:
+ 328 0040 1CF80150 		ldrb	r5, [ip, r1]	@ zero_extendqisi2
+ 329 0044 445C     		ldrb	r4, [r0, r1]	@ zero_extendqisi2
+ 330 0046 A542     		cmp	r5, r4
+ 331 0048 18BF     		it	ne
+ 332 004a 3946     		movne	r1, r7
+ 333 004c A542     		cmp	r5, r4
+ 334 004e 18BF     		it	ne
+ 335 0050 0126     		movne	r6, #1
+ 336 0052 0131     		adds	r1, r1, #1
+ 337 0054 8F42     		cmp	r7, r1
+ 338 0056 F3D8     		bhi	.L41
+ 339 0058 002E     		cmp	r6, #0
+ 340 005a E4D0     		beq	.L45
+ 341 005c 0133     		adds	r3, r3, #1
+ 342 005e 9B45     		cmp	fp, r3
+ 343 0060 98BF     		it	ls
+ 344 0062 0023     		movls	r3, #0
+ 345 0064 07FB03F8 		mul	r8, r7, r3
+ 346 0068 E0E7     		b	.L43
+ 347              	.L46:
+ 348 006a 0420     		movs	r0, #4
+ 349 006c 00E0     		b	.L38
+ 350              	.L47:
+ 351 006e 0020     		movs	r0, #0
+ 352              	.L38:
+ 353 0070 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 355              		.section	.text.sfl_fifo_remove,"ax",%progbits
+ 356              		.align	1
+ 357              		.global	sfl_fifo_remove
+ 358              		.syntax unified
+ 359              		.thumb
+ 360              		.thumb_func
+ 361              		.fpu fpv4-sp-d16
+ 363              	sfl_fifo_remove:
+ 364              		@ args = 0, pretend = 0, frame = 0
+ 365              		@ frame_needed = 0, uses_anonymous_args = 0
+ 366 0000 38B5     		push	{r3, r4, r5, lr}
+ 367 0002 0446     		mov	r4, r0
+ 368 0004 0D46     		mov	r5, r1
+ 369 0006 FFF7FEFF 		bl	hal_sys_disable_all_interrupts
+ 370 000a 2268     		ldr	r2, [r4]
+ 371 000c AA42     		cmp	r2, r5
+ 372 000e 0FD3     		bcc	.L55
+ 373 0010 0123     		movs	r3, #1
+ 374 0012 6375     		strb	r3, [r4, #21]
+ 375 0014 A368     		ldr	r3, [r4, #8]
+ 376 0016 5B19     		adds	r3, r3, r5
+ 377 0018 06D2     		bcs	.L53
+ 378 001a 2169     		ldr	r1, [r4, #16]
+ 379 001c 9942     		cmp	r1, r3
+ 380 001e 98BF     		it	ls
+ 381 0020 5B1A     		subls	r3, r3, r1
+ 382 0022 A360     		str	r3, [r4, #8]
+ 383 0024 551B     		subs	r5, r2, r5
+ 384 0026 2560     		str	r5, [r4]
+ 385              	.L53:
+ 386 0028 0023     		movs	r3, #0
+ 387 002a 6375     		strb	r3, [r4, #21]
+ 388 002c 1C46     		mov	r4, r3
+ 389 002e 00E0     		b	.L52
+ 390              	.L55:
+ 391 0030 0124     		movs	r4, #1
+ 392              	.L52:
+ 393 0032 FFF7FEFF 		bl	hal_sys_enable_all_interrupts
+ 394 0036 2046     		mov	r0, r4
+ 395 0038 38BD     		pop	{r3, r4, r5, pc}
+ 397              		.section	.text.sfl_fifo_get_distance,"ax",%progbits
+ 398              		.align	1
+ 399              		.global	sfl_fifo_get_distance
+ 400              		.syntax unified
+ 401              		.thumb
+ 402              		.thumb_func
+ 403              		.fpu fpv4-sp-d16
+ 405              	sfl_fifo_get_distance:
+ 406              		@ args = 0, pretend = 0, frame = 0
+ 407              		@ frame_needed = 0, uses_anonymous_args = 0
+ 408              		@ link register save eliminated.
+ 409 0000 8142     		cmp	r1, r0
+ 410 0002 8EBF     		itee	hi
+ 411 0004 081A     		subhi	r0, r1, r0
+ 412 0006 091A     		subls	r1, r1, r0
+ 413 0008 8818     		addls	r0, r1, r2
+ 414 000a 7047     		bx	lr
+ 416              		.section	.text.sfl_fifo_clear,"ax",%progbits
+ 417              		.align	1
+ 418              		.global	sfl_fifo_clear
+ 419              		.syntax unified
+ 420              		.thumb
+ 421              		.thumb_func
+ 422              		.fpu fpv4-sp-d16
+ 424              	sfl_fifo_clear:
+ 425              		@ args = 0, pretend = 0, frame = 0
+ 426              		@ frame_needed = 0, uses_anonymous_args = 0
+ 427 0000 38B5     		push	{r3, r4, r5, lr}
+ 428 0002 838A     		ldrh	r3, [r0, #20]
+ 429 0004 0BB1     		cbz	r3, .L64
+ 430 0006 0220     		movs	r0, #2
+ 431              	.L61:
+ 432 0008 38BD     		pop	{r3, r4, r5, pc}
+ 433              	.L64:
+ 434 000a 0446     		mov	r4, r0
+ 435 000c FFF7FEFF 		bl	hal_sys_disable_all_interrupts
+ 436 0010 0025     		movs	r5, #0
+ 437 0012 2560     		str	r5, [r4]
+ 438 0014 6560     		str	r5, [r4, #4]
+ 439 0016 A560     		str	r5, [r4, #8]
+ 440 0018 2575     		strb	r5, [r4, #20]
+ 441 001a 6575     		strb	r5, [r4, #21]
+ 442 001c FFF7FEFF 		bl	hal_sys_enable_all_interrupts
+ 443 0020 2846     		mov	r0, r5
+ 444 0022 F1E7     		b	.L61
+ 446              		.ident	"GCC: (GNU Tools for Arm Embedded Processors 8-2019-q3-update) 8.3.1 20190703 (release) [gc

@@ -1,0 +1,254 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"sfl_timer.c"
+  14              		.text
+  15              		.section	.text.sfl_timer_init,"ax",%progbits
+  16              		.align	1
+  17              		.global	sfl_timer_init
+  18              		.arch armv7e-m
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  22              		.fpu fpv4-sp-d16
+  24              	sfl_timer_init:
+  25              		@ args = 0, pretend = 0, frame = 0
+  26              		@ frame_needed = 0, uses_anonymous_args = 0
+  27              		@ link register save eliminated.
+  28 0000 014B     		ldr	r3, .L2
+  29 0002 0022     		movs	r2, #0
+  30 0004 1A70     		strb	r2, [r3]
+  31 0006 7047     		bx	lr
+  32              	.L3:
+  33              		.align	2
+  34              	.L2:
+  35 0008 00000000 		.word	.LANCHOR0
+  37              		.section	.text.sfl_timer_deinit,"ax",%progbits
+  38              		.align	1
+  39              		.global	sfl_timer_deinit
+  40              		.syntax unified
+  41              		.thumb
+  42              		.thumb_func
+  43              		.fpu fpv4-sp-d16
+  45              	sfl_timer_deinit:
+  46              		@ args = 0, pretend = 0, frame = 0
+  47              		@ frame_needed = 0, uses_anonymous_args = 0
+  48              		@ link register save eliminated.
+  49 0000 7047     		bx	lr
+  51              		.section	.text.sfl_timer_set_timestamp,"ax",%progbits
+  52              		.align	1
+  53              		.global	sfl_timer_set_timestamp
+  54              		.syntax unified
+  55              		.thumb
+  56              		.thumb_func
+  57              		.fpu fpv4-sp-d16
+  59              	sfl_timer_set_timestamp:
+  60              		@ args = 0, pretend = 0, frame = 8
+  61              		@ frame_needed = 0, uses_anonymous_args = 0
+  62 0000 00B5     		push	{lr}
+  63 0002 83B0     		sub	sp, sp, #12
+  64 0004 0023     		movs	r3, #0
+  65 0006 8DF80730 		strb	r3, [sp, #7]
+  66 000a FFF7FEFF 		bl	hal_get_timestamp
+  67 000e 10B1     		cbz	r0, .L6
+  68 0010 0123     		movs	r3, #1
+  69 0012 8DF80730 		strb	r3, [sp, #7]
+  70              	.L6:
+  71 0016 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+  72 001a 03B0     		add	sp, sp, #12
+  73              		@ sp needed
+  74 001c 5DF804FB 		ldr	pc, [sp], #4
+  76              		.section	.text.sfl_timer_get_time_elapsed,"ax",%progbits
+  77              		.align	1
+  78              		.global	sfl_timer_get_time_elapsed
+  79              		.syntax unified
+  80              		.thumb
+  81              		.thumb_func
+  82              		.fpu fpv4-sp-d16
+  84              	sfl_timer_get_time_elapsed:
+  85              		@ args = 0, pretend = 0, frame = 8
+  86              		@ frame_needed = 0, uses_anonymous_args = 0
+  87 0000 30B5     		push	{r4, r5, lr}
+  88 0002 83B0     		sub	sp, sp, #12
+  89 0004 0446     		mov	r4, r0
+  90 0006 0D46     		mov	r5, r1
+  91 0008 0323     		movs	r3, #3
+  92 000a 8DF80730 		strb	r3, [sp, #7]
+  93 000e 0023     		movs	r3, #0
+  94 0010 0093     		str	r3, [sp]
+  95 0012 1146     		mov	r1, r2
+  96 0014 6846     		mov	r0, sp
+  97 0016 FFF7FEFF 		bl	hal_get_timestamp
+  98 001a 30B1     		cbz	r0, .L9
+  99 001c 0123     		movs	r3, #1
+ 100 001e 8DF80730 		strb	r3, [sp, #7]
+ 101              	.L10:
+ 102 0022 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 103 0026 03B0     		add	sp, sp, #12
+ 104              		@ sp needed
+ 105 0028 30BD     		pop	{r4, r5, pc}
+ 106              	.L9:
+ 107 002a 0099     		ldr	r1, [sp]
+ 108 002c 491B     		subs	r1, r1, r5
+ 109 002e 2160     		str	r1, [r4]
+ 110 0030 0023     		movs	r3, #0
+ 111 0032 8DF80730 		strb	r3, [sp, #7]
+ 112 0036 F4E7     		b	.L10
+ 114              		.section	.text.sfl_timer_time_elapsed,"ax",%progbits
+ 115              		.align	1
+ 116              		.global	sfl_timer_time_elapsed
+ 117              		.syntax unified
+ 118              		.thumb
+ 119              		.thumb_func
+ 120              		.fpu fpv4-sp-d16
+ 122              	sfl_timer_time_elapsed:
+ 123              		@ args = 0, pretend = 0, frame = 8
+ 124              		@ frame_needed = 0, uses_anonymous_args = 0
+ 125 0000 30B5     		push	{r4, r5, lr}
+ 126 0002 83B0     		sub	sp, sp, #12
+ 127 0004 0446     		mov	r4, r0
+ 128 0006 1546     		mov	r5, r2
+ 129 0008 0322     		movs	r2, #3
+ 130 000a 8DF80720 		strb	r2, [sp, #7]
+ 131 000e 0022     		movs	r2, #0
+ 132 0010 0092     		str	r2, [sp]
+ 133 0012 1A46     		mov	r2, r3
+ 134 0014 6846     		mov	r0, sp
+ 135 0016 FFF7FEFF 		bl	sfl_timer_get_time_elapsed
+ 136 001a 8DF80700 		strb	r0, [sp, #7]
+ 137 001e 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 138 0022 2BB9     		cbnz	r3, .L13
+ 139 0024 009B     		ldr	r3, [sp]
+ 140 0026 AB42     		cmp	r3, r5
+ 141 0028 2CBF     		ite	cs
+ 142 002a 0123     		movcs	r3, #1
+ 143 002c 0023     		movcc	r3, #0
+ 144 002e 2370     		strb	r3, [r4]
+ 145              	.L13:
+ 146 0030 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 147 0034 03B0     		add	sp, sp, #12
+ 148              		@ sp needed
+ 149 0036 30BD     		pop	{r4, r5, pc}
+ 151              		.section	.text.sfl_timer_wait,"ax",%progbits
+ 152              		.align	1
+ 153              		.global	sfl_timer_wait
+ 154              		.syntax unified
+ 155              		.thumb
+ 156              		.thumb_func
+ 157              		.fpu fpv4-sp-d16
+ 159              	sfl_timer_wait:
+ 160              		@ args = 0, pretend = 0, frame = 8
+ 161              		@ frame_needed = 0, uses_anonymous_args = 0
+ 162 0000 30B5     		push	{r4, r5, lr}
+ 163 0002 83B0     		sub	sp, sp, #12
+ 164 0004 0446     		mov	r4, r0
+ 165 0006 0D46     		mov	r5, r1
+ 166 0008 0023     		movs	r3, #0
+ 167 000a 0193     		str	r3, [sp, #4]
+ 168 000c 8DF80330 		strb	r3, [sp, #3]
+ 169 0010 01A8     		add	r0, sp, #4
+ 170 0012 FFF7FEFF 		bl	sfl_timer_set_timestamp
+ 171 0016 9DF80330 		ldrb	r3, [sp, #3]	@ zero_extendqisi2
+ 172 001a 53B9     		cbnz	r3, .L17
+ 173              	.L18:
+ 174 001c 2B46     		mov	r3, r5
+ 175 001e 2246     		mov	r2, r4
+ 176 0020 0199     		ldr	r1, [sp, #4]
+ 177 0022 0DF10300 		add	r0, sp, #3
+ 178 0026 FFF7FEFF 		bl	sfl_timer_time_elapsed
+ 179 002a 9DF80330 		ldrb	r3, [sp, #3]	@ zero_extendqisi2
+ 180 002e 002B     		cmp	r3, #0
+ 181 0030 F4D0     		beq	.L18
+ 182              	.L17:
+ 183 0032 0020     		movs	r0, #0
+ 184 0034 03B0     		add	sp, sp, #12
+ 185              		@ sp needed
+ 186 0036 30BD     		pop	{r4, r5, pc}
+ 188              		.section	.text.sfl_timer_get_roundtrip_time,"ax",%progbits
+ 189              		.align	1
+ 190              		.global	sfl_timer_get_roundtrip_time
+ 191              		.syntax unified
+ 192              		.thumb
+ 193              		.thumb_func
+ 194              		.fpu fpv4-sp-d16
+ 196              	sfl_timer_get_roundtrip_time:
+ 197              		@ args = 0, pretend = 0, frame = 8
+ 198              		@ frame_needed = 0, uses_anonymous_args = 0
+ 199 0000 10B5     		push	{r4, lr}
+ 200 0002 82B0     		sub	sp, sp, #8
+ 201 0004 0446     		mov	r4, r0
+ 202 0006 0023     		movs	r3, #0
+ 203 0008 8DF80730 		strb	r3, [sp, #7]
+ 204 000c 154B     		ldr	r3, .L29
+ 205 000e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 206 0010 8BB9     		cbnz	r3, .L22
+ 207 0012 1548     		ldr	r0, .L29+4
+ 208 0014 FFF7FEFF 		bl	hal_get_timestamp
+ 209 0018 30B1     		cbz	r0, .L23
+ 210 001a 0123     		movs	r3, #1
+ 211 001c 8DF80730 		strb	r3, [sp, #7]
+ 212              	.L24:
+ 213 0020 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 214 0024 02B0     		add	sp, sp, #8
+ 215              		@ sp needed
+ 216 0026 10BD     		pop	{r4, pc}
+ 217              	.L23:
+ 218 0028 0F4B     		ldr	r3, .L29+4
+ 219 002a 1B68     		ldr	r3, [r3]
+ 220 002c 2360     		str	r3, [r4]
+ 221 002e 0D4B     		ldr	r3, .L29
+ 222 0030 0122     		movs	r2, #1
+ 223 0032 1A70     		strb	r2, [r3]
+ 224 0034 F4E7     		b	.L24
+ 225              	.L22:
+ 226 0036 0D48     		ldr	r0, .L29+8
+ 227 0038 FFF7FEFF 		bl	hal_get_timestamp
+ 228 003c 18B1     		cbz	r0, .L25
+ 229 003e 0123     		movs	r3, #1
+ 230 0040 8DF80730 		strb	r3, [sp, #7]
+ 231 0044 ECE7     		b	.L24
+ 232              	.L25:
+ 233 0046 084B     		ldr	r3, .L29+4
+ 234 0048 1B68     		ldr	r3, [r3]
+ 235 004a 084A     		ldr	r2, .L29+8
+ 236 004c 1268     		ldr	r2, [r2]
+ 237 004e 9342     		cmp	r3, r2
+ 238 0050 34BF     		ite	cc
+ 239 0052 D31A     		subcc	r3, r2, r3
+ 240 0054 9B1A     		subcs	r3, r3, r2
+ 241 0056 2360     		str	r3, [r4]
+ 242 0058 044B     		ldr	r3, .L29+8
+ 243 005a 1A68     		ldr	r2, [r3]
+ 244 005c 024B     		ldr	r3, .L29+4
+ 245 005e 1A60     		str	r2, [r3]
+ 246 0060 DEE7     		b	.L24
+ 247              	.L30:
+ 248 0062 00BF     		.align	2
+ 249              	.L29:
+ 250 0064 00000000 		.word	.LANCHOR0
+ 251 0068 00000000 		.word	.LANCHOR1
+ 252 006c 00000000 		.word	.LANCHOR2
+ 254              		.section	.bss.mgl_roundtrip_init_flg,"aw",%nobits
+ 255              		.set	.LANCHOR0,. + 0
+ 258              	mgl_roundtrip_init_flg:
+ 259 0000 00       		.space	1
+ 260              		.section	.bss.timestamp_t0.5498,"aw",%nobits
+ 261              		.align	2
+ 262              		.set	.LANCHOR1,. + 0
+ 265              	timestamp_t0.5498:
+ 266 0000 00000000 		.space	4
+ 267              		.section	.bss.timestamp_t1.5499,"aw",%nobits
+ 268              		.align	2
+ 269              		.set	.LANCHOR2,. + 0
+ 272              	timestamp_t1.5499:
+ 273 0000 00000000 		.space	4
+ 274              		.ident	"GCC: (GNU Tools for Arm Embedded Processors 8-2019-q3-update) 8.3.1 20190703 (release) [gc
